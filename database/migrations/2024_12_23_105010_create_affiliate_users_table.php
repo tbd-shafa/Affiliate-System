@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('bank_name'); // Bank Name
             $table->string('branch_address')->nullable(); // Optional Branch Address
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->string('affiliate_link')->unique();
+            $table->string('affiliate_link')->nullable();
             $table->timestamps();
         });
     }

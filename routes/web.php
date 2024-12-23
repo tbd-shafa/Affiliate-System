@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AffiliateController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,6 +17,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // manage affiliate
+    Route::get('/become-affiliate', [AffiliateController::class, 'create'])->name('affiliate.create');
+    Route::post('/become-affiliate', [AffiliateController::class, 'store'])->name('affiliate.store');
+    Route::get('/admin/affiliate-requests', [AffiliateController::class, 'showPendingRequests'])->name('affiliate.requests');
+    Route::post('/admin/affiliate-requests/{id}/approve', [AffiliateController::class, 'approveRequest'])->name('affiliate.approve');
+    Route::post('/admin/affiliate-requests/{id}/reject', [AffiliateController::class, 'rejectRequest'])->name('affiliate.reject');
+
 
     // User Management Routes
     Route::prefix('users')->name('users.')->group(function () {
