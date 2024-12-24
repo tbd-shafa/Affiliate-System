@@ -47,42 +47,59 @@ class AffiliateController extends Controller
         return view('admin.affiliate_requests', compact('pendingRequests'));
     }
 
+
     public function approveRequest(Request $request, $id)
     {
-        
-        if ($request->approve === null) {
-           
-            $request->validate([
-                'percentage' => 'required|numeric|min:0|max:100',
-            ]);
-        
+        // Debugging Input
+        // dd($request->all());
 
+        $actionType = $request->input('action_type');
+
+        if ($actionType === 'submit_without_percentage') {
+            // Skip validation for percentage
+            $affiliateUser = AffiliateUser::findOrFail($id);
+
+            // Generate a unique registration link with the affiliate's user_id
+            $uniqueAffiliateLink = route('register') . '?referrer=' . $affiliateUser->user_id;
+
+            // Update the affiliate user status and link
+            $affiliateUser->update([
+                'status' => 'approved',
+                'affiliate_link' => $uniqueAffiliateLink,
+            ]);
+
+            return redirect()->route('affiliate.requests')->with('success', 'Affiliate approved successfully without setting a percentage.');
         }
-      
-    
-        $affiliateUser = AffiliateUser::findOrFail($id);
-    
-        // Generate a unique registration link with the affiliate's user_id
-        $uniqueAffiliateLink = route('register') . '?referrer=' . $affiliateUser->user_id;
-    
-        // Update the affiliate user status and link
-        $affiliateUser->update([
-            'status' => 'approved',
-            'affiliate_link' => $uniqueAffiliateLink,
-        ]);
-    
-        // Save percentage in the settings table if provided
-        if ($request->has('percentage') && $request->percentage !== null) {
+
+        if ($actionType === 'approve') {
+            // Validate percentage field
             $request->validate([
                 'percentage' => 'required|numeric|min:0|max:100',
+            ], [
+                'percentage.required' => 'The percentage field is required when approving.',
             ]);
+
+            $affiliateUser = AffiliateUser::findOrFail($id);
+
+            // Generate a unique registration link with the affiliate's user_id
+            $uniqueAffiliateLink = route('register') . '?referrer=' . $affiliateUser->user_id;
+
+            // Update the affiliate user status and link
+            $affiliateUser->update([
+                'status' => 'approved',
+                'affiliate_link' => $uniqueAffiliateLink,
+            ]);
+
+            // Save percentage in the settings table
             Setting::updateOrCreate(
                 ['key' => $affiliateUser->user_id],
                 ['value' => $request->percentage]
             );
+
+            return redirect()->route('affiliate.requests')->with('success', 'Affiliate approved successfully with percentage set.');
         }
 
-        return redirect()->route('affiliate.requests')->with('success', 'Affiliate approved successfully!');
+        return redirect()->back()->with('error', 'Invalid action type.');
     }
 
     public function rejectRequest($id)
