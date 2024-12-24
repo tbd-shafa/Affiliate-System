@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AffiliateController;
+use App\Http\Controllers\SubscriptionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,7 +26,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/affiliate-requests/{id}/approve', [AffiliateController::class, 'approveRequest'])->name('affiliate.approve');
     Route::post('/admin/affiliate-requests/{id}/reject', [AffiliateController::class, 'rejectRequest'])->name('affiliate.reject');
 
+    Route::get('/affiliate/commission-balance', [AffiliateController::class, 'commissionBalance'])->name('affiliate.commission.balance');
+    Route::get('/affiliate/referred-users', [AffiliateController::class, 'referredUsers'])->name('affiliate.referred.users');
+    Route::get('/affiliate/earn-history', [AffiliateController::class, 'earnHistory'])->name('affiliate.earn.history');
 
+
+    // Manage subscription
+    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::post('/subscriptions/buy', [SubscriptionController::class, 'buySubscription'])->name('subscriptions.buy');
     // User Management Routes
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/{role}', [UserController::class, 'index'])->name('index'); // Dynamic route for all users based on role

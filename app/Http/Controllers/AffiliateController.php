@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\AffiliateUser;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
+use App\Models\Commission;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -46,7 +48,8 @@ class AffiliateController extends Controller
     }
     public function showPendingRequests()
     {
-        $pendingRequests = AffiliateUser::where('status', 'pending')->get();
+        //$pendingRequests = AffiliateUser::where('status', 'pending')->get();
+        $pendingRequests = AffiliateUser::where('status', 'pending')->paginate(10);
         return view('admin.affiliate_requests', compact('pendingRequests'));
     }
 
@@ -63,7 +66,7 @@ class AffiliateController extends Controller
         $userEmail = $affiliateUser->user->email;
         $referralCode = encrypt($affiliateUser->user_id);
         if ($actionType === 'submit_without_percentage') {
-          
+
             // Generate a unique registration link
             $uniqueAffiliateLink = route('register') . '?referrer=' . $referralCode;
 
@@ -72,7 +75,9 @@ class AffiliateController extends Controller
                 'status' => 'approved',
                 'affiliate_link' => $uniqueAffiliateLink,
             ]);
-
+            $affiliateUser->user->update([
+                'role' => 'affiliate_user',
+            ]);
             // Send approval email
             $this->sendApprovalEmail($userEmail, true);
 
@@ -88,12 +93,16 @@ class AffiliateController extends Controller
             ]);
 
             // Generate a unique registration link
-            $uniqueAffiliateLink =route('register') . '?referrer=' . $referralCode;
+            $uniqueAffiliateLink = route('register') . '?referrer=' . $referralCode;
 
             // Update affiliate user status and link
             $affiliateUser->update([
                 'status' => 'approved',
                 'affiliate_link' => $uniqueAffiliateLink,
+            ]);
+
+            $affiliateUser->user->update([
+                'role' => 'affiliate_user',
             ]);
 
             // Save percentage in settings
@@ -110,7 +119,6 @@ class AffiliateController extends Controller
 
         return redirect()->back()->with('error', 'Invalid action type.');
     }
-
 
     public function rejectRequest($id)
     {
@@ -158,5 +166,35 @@ class AffiliateController extends Controller
             // Log error or handle failure
             \Log::error('Failed to send email: ' . $mail->ErrorInfo);
         }
+    }
+
+    public function commissionBalance()
+    {
+        $userId = auth()->user()->id;
+        $totalCommission = Commission::where('affiliate_user_id', $userId)->sum('amount');
+
+        return view('affiliate.commission_balance', compact('totalCommission'));
+    }
+
+
+    public function referredUsers()
+    {
+        $userId = auth()->user()->id;
+
+        // Get the list of users whose `user_id` exists in the `commissions` table and matches the authenticated user as the affiliate
+        $referredUsers = User::whereHas('commissions', function ($query) use ($userId) {
+            $query->where('affiliate_user_id', $userId); // Match affiliate_user_id with the logged-in user
+        })->paginate(10);
+
+        return view('affiliate.referred_users', compact('referredUsers'));
+    }
+
+
+    public function earnHistory()
+    {
+        $userId = auth()->user()->id;
+        $earnHistory = Commission::where('affiliate_user_id', $userId)->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('affiliate.earn_history', compact('earnHistory'));
     }
 }

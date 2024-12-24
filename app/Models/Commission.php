@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,10 +9,25 @@ class Commission extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['affiliate_user_id', 'amount', 'package_name', 'percentage'];
+    protected $fillable = [
+        'user_id',
+        'affiliate_user_id',
+        'amount',
+        'package_id',
+        'percentage',
+    ];
+
+    public function affiliateUser1()
+    {
+        return $this->belongsTo(AffiliateUser::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 
     public function affiliateUser()
     {
-        return $this->belongsTo(AffiliateUser::class);
+        return $this->belongsTo(User::class, 'affiliate_user_id', 'id');
     }
 }

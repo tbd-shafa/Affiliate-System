@@ -59,8 +59,8 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
-        if ($request->has('referrer')) {
+       
+         if ($request->referrer !== null) {
             $encryptedReferrerCode = $request->referrer;
         
             try {
@@ -80,25 +80,29 @@ class RegisteredUserController extends Controller
                
                 return redirect()->back()->withErrors('Invalid or unapproved referrer.');
             }
-        }
-        
-
-
-        
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'user',
-        ]);
-
-        if ($referrerId) {
-            // Link the new user to the referring affiliate
-            AffiliateReferral::create([
-                'referrer_id' => $referrerId,
-                'user_id' => $user->id,
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'user',
+            ]);
+            
+            if ($referrerId) {
+                // Link the new user to the referring affiliate
+                AffiliateReferral::create([
+                    'referrer_id' => $referrerId,
+                    'user_id' => $user->id,
+                ]);
+            }
+        }else{
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'user',
             ]);
         }
+        
 
         event(new Registered($user));
 

@@ -43,7 +43,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pendingRequests as $request)
+
+                        @forelse ($pendingRequests as $request)
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="border border-gray-300 px-4 py-2">{{ $request->id }}</td>
                                 <td class="border border-gray-300 px-4 py-2">{{ $request->user->name }}</td>
@@ -73,10 +74,17 @@
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="9" class="border px-4 py-2 text-center">No data found</td>
+                            </tr>
+                        @endforelse
+
                     </tbody>
                 </table>
-
+                <div class="mt-4">
+                    {{ $pendingRequests->links() }}
+                </div>
                 <!-- Approve Modal -->
                 @foreach ($pendingRequests as $request)
                     <div id="approveModal{{ $request->id }}"

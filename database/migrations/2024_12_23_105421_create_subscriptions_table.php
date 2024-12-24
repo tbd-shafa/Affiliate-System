@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('package_name');
-            $table->decimal('price', 10, 2);
-            $table->enum('status', ['active', 'expired'])->default('active');
+            $table->foreignId('user_id')->index()->nullable();
+            $table->foreignId('subscription_plan_id')->index()->nullable();
+            $table->string('type');
+            $table->string('stripe_id')->unique();
+            $table->string('stripe_status')->index();
+            $table->string('stripe_price')->nullable();
+            $table->integer('quantity')->nullable();
+            $table->timestamp('trial_ends_at')->nullable()->index();
+            $table->timestamp('ends_at')->nullable()->index();
             $table->timestamps();
+
+            $table->index(['user_id', 'stripe_status']);
         });
     }
 

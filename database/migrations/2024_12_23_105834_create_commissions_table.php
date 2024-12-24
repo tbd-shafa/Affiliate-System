@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('commissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('affiliate_user_id')->constrained()->onDelete('cascade');
+            $table->integer('user_id')->length(11);
+            $table->integer('affiliate_user_id')->length(11);
             $table->decimal('amount', 10, 2);
-            $table->string('package_name');
+            $table->integer('package_id')->length(11);
             $table->decimal('percentage', 5, 2);
             $table->timestamps();
         });

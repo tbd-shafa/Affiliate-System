@@ -62,14 +62,10 @@
 
                     </div>
                 @elseif (Auth::user()->role === 'user')
-                    <x-nav-link href="#" :active="request()->routeIs('subscription')">
+                    <x-nav-link href="{{ route('subscriptions.index') }}" :active="request()->routeIs('subscription')">
                         {{ __('Buy Subscription Plan') }}
                     </x-nav-link>
-                    @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                        <x-nav-link href="{{ Auth::user()->affiliateUser->affiliate_link }}" :active="request()->routeIs('affiliate-link')">
-                            {{ __('Affiliate Link: ' . Auth::user()->affiliateUser->affiliate_link) }}
-                        </x-nav-link>
-                    @endif
+                  
                     
                     <!-- Show "Become an Affiliate" button only if status is not 'pending' or 'approved' -->
                     @if (!Auth::user()->affiliateUser || !in_array(Auth::user()->affiliateUser->status, ['pending', 'approved']))
@@ -79,8 +75,23 @@
                     @endif
                 @elseif (Auth::user()->role === 'affiliate_user')
                     @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                       <x-nav-link href="{{ Auth::user()->affiliateUser->affiliate_link }}" :active="request()->routeIs('affiliate-link')">
-                            {{ __('Affiliate Link: ' . Auth::user()->affiliateUser->affiliate_link) }}
+                       <x-nav-link href="{{ Auth::user()->affiliateUser->affiliate_link }}"  target="_blank" :active="request()->routeIs('affiliate-link')">
+                            {{ __('Affiliate Link ') }}
+                        </x-nav-link>
+                    @endif
+                    @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
+                       <x-nav-link href="{{ route('affiliate.commission.balance') }}" :active="request()->routeIs('affiliate-link')">
+                            {{ __('Current commission balance') }}
+                        </x-nav-link>
+                    @endif
+                    @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
+                       <x-nav-link href="{{ route('affiliate.referred.users') }}" :active="request()->routeIs('affiliate-link')">
+                            {{ __('Referred users') }}
+                        </x-nav-link>
+                    @endif
+                    @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
+                       <x-nav-link href="{{ route('affiliate.earn.history') }}"  :active="request()->routeIs('affiliate-link')">
+                            {{ __('Earn History') }}
                         </x-nav-link>
                     @endif
 
