@@ -61,10 +61,11 @@ class AffiliateController extends Controller
 
         // Get the email address of the user associated with the affiliate
         $userEmail = $affiliateUser->user->email;
-
+        $referralCode = encrypt($affiliateUser->user_id);
         if ($actionType === 'submit_without_percentage') {
+          
             // Generate a unique registration link
-            $uniqueAffiliateLink = route('register') . '?referrer=' . $affiliateUser->user_id;
+            $uniqueAffiliateLink = route('register') . '?referrer=' . $referralCode;
 
             // Update affiliate user status and link
             $affiliateUser->update([
@@ -87,7 +88,7 @@ class AffiliateController extends Controller
             ]);
 
             // Generate a unique registration link
-            $uniqueAffiliateLink = route('register') . '?referrer=' . $affiliateUser->user_id;
+            $uniqueAffiliateLink =route('register') . '?referrer=' . $referralCode;
 
             // Update affiliate user status and link
             $affiliateUser->update([

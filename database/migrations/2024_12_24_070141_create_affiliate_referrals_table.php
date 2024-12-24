@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('referrals', function (Blueprint $table) {
+        Schema::create('affiliate_referrals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('affiliate_user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('referred_user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('referrer_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
+
+            $table->foreign('referrer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('referrals');
+        Schema::dropIfExists('affiliate_referrals');
     }
 };

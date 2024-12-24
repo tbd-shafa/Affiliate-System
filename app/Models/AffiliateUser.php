@@ -29,7 +29,7 @@ class AffiliateUser extends Model
 
     public function referrals()
     {
-        return $this->hasMany(Referral::class);
+        return $this->hasMany(AffiliateReferral::class);
     }
 
     public function commissions()

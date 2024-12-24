@@ -66,10 +66,11 @@
                         {{ __('Buy Subscription Plan') }}
                     </x-nav-link>
                     @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                        <x-nav-link href="#" :active="request()->routeIs('affiliate-link')">
+                        <x-nav-link href="{{ Auth::user()->affiliateUser->affiliate_link }}" :active="request()->routeIs('affiliate-link')">
                             {{ __('Affiliate Link: ' . Auth::user()->affiliateUser->affiliate_link) }}
                         </x-nav-link>
                     @endif
+                    
                     <!-- Show "Become an Affiliate" button only if status is not 'pending' or 'approved' -->
                     @if (!Auth::user()->affiliateUser || !in_array(Auth::user()->affiliateUser->status, ['pending', 'approved']))
                         <x-nav-link href="{{ route('affiliate.create') }}" :active="request()->routeIs('affiliate.create')">
@@ -78,7 +79,7 @@
                     @endif
                 @elseif (Auth::user()->role === 'affiliate_user')
                     @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                        <x-nav-link href="#" :active="request()->routeIs('affiliate-link')">
+                       <x-nav-link href="{{ Auth::user()->affiliateUser->affiliate_link }}" :active="request()->routeIs('affiliate-link')">
                             {{ __('Affiliate Link: ' . Auth::user()->affiliateUser->affiliate_link) }}
                         </x-nav-link>
                     @endif

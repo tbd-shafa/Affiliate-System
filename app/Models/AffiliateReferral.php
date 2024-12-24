@@ -4,11 +4,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Referral extends Model
+class AffiliateReferral extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['affiliate_user_id', 'referred_user_id'];
+    protected $fillable = ['referrer_id', 'user_id'];
 
     public function affiliateUser()
     {
@@ -17,6 +17,6 @@ class Referral extends Model
 
     public function referredUser()
     {
-        return $this->belongsTo(User::class, 'referred_user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
