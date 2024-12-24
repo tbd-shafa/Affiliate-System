@@ -17,7 +17,7 @@ class AffiliateUser extends Model
         'bank_name',
         'branch_address',
         'status',
-       
+        'affiliate_link',
     ];
 
     // Relationship with User

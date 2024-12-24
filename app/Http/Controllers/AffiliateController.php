@@ -58,10 +58,10 @@ class AffiliateController extends Controller
         if ($actionType === 'submit_without_percentage') {
             // Skip validation for percentage
             $affiliateUser = AffiliateUser::findOrFail($id);
-
+           
             // Generate a unique registration link with the affiliate's user_id
             $uniqueAffiliateLink = route('register') . '?referrer=' . $affiliateUser->user_id;
-
+            //dd($uniqueAffiliateLink);
             // Update the affiliate user status and link
             $affiliateUser->update([
                 'status' => 'approved',
