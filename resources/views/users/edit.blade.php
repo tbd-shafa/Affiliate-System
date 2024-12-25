@@ -53,6 +53,7 @@
                                         </div>
 
                                         <!-- Role -->
+                                        <!-- Role -->
                                         <div class="mt-4">
                                             <x-input-label for="role" :value="__('Role')" />
                                             <select id="role" name="role"
@@ -65,11 +66,79 @@
                                                     Affiliate User</option>
                                                 <option value="user"
                                                     {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>Normal
-                                                    User
-                                                </option>
+                                                    User</option>
                                             </select>
                                             <x-input-error :messages="$errors->get('role')" class="mt-2" />
                                         </div>
+
+                                        <!-- Affiliate User Fields -->
+                                        <div id="affiliate-fields" style="display: none;">
+                                            <div class="mb-4">
+                                                <label for="address"
+                                                    class="block text-sm font-medium text-gray-700">Address</label>
+                                                <textarea id="address" name="address" class="block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('address', $affiliateDetails->address ?? '') }}</textarea>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label for="acc_name"
+                                                    class="block text-sm font-medium text-gray-700">Account Name</label>
+                                                <input id="acc_name" name="acc_name" type="text"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
+                                                    value="{{ old('acc_name', $affiliateDetails->acc_name ?? '') }}"
+                                                    required />
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label for="acc_no"
+                                                    class="block text-sm font-medium text-gray-700">Account
+                                                    Number</label>
+                                                <input id="acc_no" name="acc_no" type="text"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
+                                                    value="{{ old('acc_no', $affiliateDetails->acc_no ?? '') }}"
+                                                    required />
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label for="bank_name"
+                                                    class="block text-sm font-medium text-gray-700">Bank Name</label>
+                                                <input id="bank_name" name="bank_name" type="text"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
+                                                    value="{{ old('bank_name', $affiliateDetails->bank_name ?? '') }}"
+                                                    required />
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label for="branch_address"
+                                                    class="block text-sm font-medium text-gray-700">Branch
+                                                    Address</label>
+                                                <input id="branch_address" name="branch_address" type="text"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
+                                                    value="{{ old('branch_address', $affiliateDetails->branch_address ?? '') }}"
+                                                    required />
+                                            </div>
+                                        </div>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                const roleSelect = document.getElementById('role');
+                                                const affiliateFields = document.getElementById('affiliate-fields');
+
+                                                // Function to toggle the visibility of affiliate fields
+                                                function toggleAffiliateFields() {
+                                                    if (roleSelect.value === 'affiliate_user') {
+                                                        affiliateFields.style.display = 'block';
+                                                    } else {
+                                                        affiliateFields.style.display = 'none';
+                                                    }
+                                                }
+
+                                                // Initial check on page load
+                                                toggleAffiliateFields();
+
+                                                // Add event listener to role select dropdown
+                                                roleSelect.addEventListener('change', toggleAffiliateFields);
+                                            });
+                                        </script>
+
 
                                         <!-- Password -->
                                         <div class="mt-4">
@@ -106,7 +175,7 @@
 
                                             <button type="submit"
                                                 class="ml-4 inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">
-                                                Update {{ ucfirst($role) }} User
+                                                Update
                                             </button>
                                         </div>
 

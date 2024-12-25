@@ -34,6 +34,12 @@ Route::middleware('auth')->group(function () {
     // Manage subscription
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::post('/subscriptions/buy', [SubscriptionController::class, 'buySubscription'])->name('subscriptions.buy');
+
+    //manage commision percentage
+    Route::get('/commission-percentage', [SubscriptionController::class, 'viewCommisionPercentage'])->name('commission.percentage');
+    Route::get('/commission-percentage/{id}/edit', [SubscriptionController::class, 'editCommisionPercentage'])->name('commission.edit');
+Route::post('/commission-percentage/update', [SubscriptionController::class, 'updateCommisionPercentage'])->name('commission.update');
+  
     // User Management Routes
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/{role}', [UserController::class, 'index'])->name('index'); // Dynamic route for all users based on role

@@ -50,7 +50,7 @@ class AffiliateController extends Controller
     {
         //$pendingRequests = AffiliateUser::where('status', 'pending')->get();
         $pendingRequests = AffiliateUser::where('status', 'pending')->paginate(10);
-        return view('admin.affiliate_requests', compact('pendingRequests'));
+        return view('affiliate.affiliate_requests', compact('pendingRequests'));
     }
 
 
@@ -78,6 +78,10 @@ class AffiliateController extends Controller
             $affiliateUser->user->update([
                 'role' => 'affiliate_user',
             ]);
+            Setting::updateOrCreate(
+                ['key' => $affiliateUser->user_id],
+                ['value' => 10]
+            );
             // Send approval email
             $this->sendApprovalEmail($userEmail, true);
 

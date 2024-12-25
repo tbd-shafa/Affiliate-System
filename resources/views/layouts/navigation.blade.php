@@ -59,6 +59,10 @@
                             {{ __('Affiliate Request') }}
                         </x-nav-link>
 
+                         <x-nav-link href="{{ route('commission.percentage') }}" :active="request()->routeIs('commission.percentage')">
+                            {{ __(' Commission Percentage') }}
+                        </x-nav-link>
+
 
                     </div>
                 @elseif (Auth::user()->role === 'user')

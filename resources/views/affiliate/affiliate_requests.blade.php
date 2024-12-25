@@ -137,7 +137,7 @@
                                     <button type="submit"
                                         class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition"
                                         onclick="document.getElementById('action_type{{ $request->id }}').value = 'submit_without_percentage';">
-                                        Submit without set Percentage
+                                        Submit with Default Percentage
                                     </button>
                                     <!-- Approve Button -->
                                     <button type="submit"

@@ -17,10 +17,7 @@ class Commission extends Model
         'percentage',
     ];
 
-    // public function affiliateUser1()
-    // {
-    //     return $this->belongsTo(AffiliateUser::class);
-    // }
+    
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

@@ -46,8 +46,41 @@
 
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                         </div>
+                         @if($role === 'affiliate_user')
+                          <div class="mb-4">
+                            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                            <textarea id="address" name="address" class="block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('address') }}</textarea>
+                        </div>
+                       
+                        <div class="mb-4">
+                            <label for="acc_name" class="block text-sm font-medium text-gray-700">Account Name</label>
+                            <input id="acc_name" name="acc_name" type="text"
+                                class="block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('acc_name') }}"
+                                required />
+                        </div>
 
+                        <div class="mb-4">
+                            <label for="acc_no" class="block text-sm font-medium text-gray-700">Account Number</label>
+                            <input id="acc_no" name="acc_no" type="text"
+                                class="block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('acc_no') }}"
+                                required />
+                        </div>
 
+                        <div class="mb-4">
+                            <label for="bank_name" class="block text-sm font-medium text-gray-700">Bank Name</label>
+                            <input id="bank_name" name="bank_name" type="text"
+                                class="block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('bank_name') }}"
+                                required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="branch_address" class="block text-sm font-medium text-gray-700">Branch
+                                Address</label>
+                            <input id="branch_address" name="branch_address" type="text"
+                                class="block w-full rounded-md border-gray-300 shadow-sm"
+                                value="{{ old('branch_address') }}" required />
+                        </div>
+                        @endif
                         <div class="flex items-center justify-end mt-4 mb-4">
                             <button type="submit"
                                 class="inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">

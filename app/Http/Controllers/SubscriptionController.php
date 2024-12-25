@@ -9,6 +9,7 @@ use App\Models\AffiliateReferral;
 use App\Models\Setting;
 use App\Models\Commission;
 use App\Models\Subscription;
+use App\Models\User;
 
 class SubscriptionController extends Controller
 {
@@ -75,4 +76,41 @@ class SubscriptionController extends Controller
         // Redirect to the subscriptions index with a success message
         return redirect()->route('subscriptions.index')->with('success', 'Subscription purchased successfully.');
     }
+
+    public function viewCommisionPercentage()
+    {
+        // Fetch users with their percentage from the `settings` table
+        $data = Setting::leftJoin('users', 'settings.key', '=', 'users.id') // Join settings with users
+        ->select('settings.key', 'users.name', 'settings.value as percentage') // Select relevant fields
+        ->paginate(10);
+
+        return view('subscriptions.percentage', compact('data'));
+    }
+    public function editCommisionPercentage($id)
+    {
+        $user = Setting::leftJoin('users', 'settings.key', '=', 'users.id')
+        ->select('settings.key as user_id', 'users.name', 'settings.value as percentage')
+        ->where('settings.key', $id)
+        ->firstOrFail();
+
+    return view('subscriptions.percentage_edit', compact('user'));
+
+    }
+    
+    public function updateCommisionPercentage(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'percentage' => 'required|numeric|min:0|max:100',
+        ]);
+
+        // Update or create a new record in the settings table
+        Setting::updateOrCreate(
+            ['key' => $request->user_id],
+            ['value' => $request->percentage]
+        );
+
+        return redirect()->route('commission.percentage')->with('success', 'Commission percentage updated successfully.');
+    }
+
 }
