@@ -11,9 +11,6 @@ class AffiliateReferral extends Model
 
     protected $fillable = ['referrer_id', 'user_id'];
 
-
-
-
     public function affiliateUser()
     {
         return $this->belongsTo(User::class, 'referrer_id');
