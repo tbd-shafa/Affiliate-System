@@ -38,7 +38,7 @@
                                         {{ $loop->iteration }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($history->amount, 2) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $history->package_id }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $history->subscriptionPlan ? $history->subscriptionPlan->name : 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                        {{ $history->percentage }}%
