@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AffiliateUser;
+use App\Models\AffiliateReferral;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
 use App\Models\Commission;
@@ -186,8 +187,13 @@ class AffiliateController extends Controller
         $userId = auth()->user()->id;
 
         // Get the list of users whose `user_id` exists in the `commissions` table and matches the authenticated user as the affiliate
-        $referredUsers = User::whereHas('commissions', function ($query) use ($userId) {
-            $query->where('affiliate_user_id', $userId); // Match affiliate_user_id with the logged-in user
+        // $referredUsers = User::whereHas('commissions', function ($query) use ($userId) {
+        //     $query->where('affiliate_user_id', $userId); // Match affiliate_user_id with the logged-in user
+        // })->paginate(10);
+        $referredUsers = User::whereIn('id', function ($query) use ($userId) {
+            $query->select('user_id')
+                  ->from('affiliate_referrals')
+                  ->where('referrer_id', $userId); // Match the referrer_id
         })->paginate(10);
 
         return view('affiliate.referred_users', compact('referredUsers'));
