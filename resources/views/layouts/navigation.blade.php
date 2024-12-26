@@ -19,7 +19,8 @@
             </div>
             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <!-- Role-Based Menu -->
-                @if (Auth::user()->role === 'admin')
+               
+                 @if (Auth::user()->roles->contains('name', 'admin'))
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
@@ -65,19 +66,20 @@
 
 
                     </div>
-                @elseif (Auth::user()->role === 'user')
+                @elseif (Auth::user()->roles->contains('name', 'user'))
                     <x-nav-link href="{{ route('subscriptions.index') }}" :active="request()->routeIs('subscription')">
                         {{ __('Buy Subscription Plan') }}
                     </x-nav-link>
                   
                     
                     <!-- Show "Become an Affiliate" button only if status is not 'pending' or 'approved' -->
+                    
                     @if (!Auth::user()->affiliateUser || !in_array(Auth::user()->affiliateUser->status, ['pending', 'approved']))
                         <x-nav-link href="{{ route('affiliate.create') }}" :active="request()->routeIs('affiliate.create')">
                             {{ __('Become an Affiliate') }}
                         </x-nav-link>
                     @endif
-                @elseif (Auth::user()->role === 'affiliate_user')
+                @elseif (Auth::user()->roles->contains('name', 'affiliate_user'))
                     @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
                        <x-nav-link href="{{ Auth::user()->affiliateUser->affiliate_link }}"  target="_blank" :active="request()->routeIs('affiliate-link')">
                             {{ __('Affiliate Link ') }}

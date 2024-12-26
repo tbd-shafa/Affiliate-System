@@ -48,10 +48,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function affiliateUser()
-    {
-        return $this->hasOne(AffiliateUser::class);
-    }
+    // public function affiliateUser()
+    // {
+    //     return $this->hasOne(AffiliateUser::class);
+    // }
+
+    
 
     public function referrals()
     {
@@ -80,6 +82,10 @@ class User extends Authenticatable
     public function getRoleAttribute()
     {
         return $this->roles->first()->name ?? 'user'; // Default to 'user' if no role is found
+    }
+    public function affiliateUser()
+    {
+        return $this->hasOne(UserDetail::class, 'user_id');
     }
    
 }
