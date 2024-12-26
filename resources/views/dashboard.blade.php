@@ -28,13 +28,13 @@
                     </div>
                 @endif
                 <div class="p-6 text-gray-900">
-                    @if (Auth::user()->role === 'admin')
+                    @if (Auth::user()->roles->contains('name', 'admin'))
                         <h3>Welcome to Admin Panel</h3>
                         <p>Manage users and settings.</p>
-                    @elseif (Auth::user()->role === 'user')
+                    @elseif (Auth::user()->roles->contains('name', 'user'))
                         <h3>Welcome to User Panel</h3>
                         <p>Explore subscription plans and become an affiliate.</p>
-                    @elseif (Auth::user()->role === 'affiliate_user')
+                    @elseif (Auth::user()->roles->contains('name', 'affiliate_user'))
                         <h3>Welcome to Affiliate Panel</h3>
                         <p>View your affiliate link and earnings.</p>
                     @endif
