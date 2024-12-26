@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id')->length(11);
             $table->integer('affiliate_user_id')->length(11);
+            $table->integer('subscriptions_id')->length(11);
             $table->decimal('amount', 10, 2);
             $table->integer('package_id')->length(11);
             $table->decimal('percentage', 5, 2);

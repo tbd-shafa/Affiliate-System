@@ -81,7 +81,7 @@
 
                                             <div class="mb-4">
                                                 <label for="acc_name"
-                                                    class="block text-sm font-medium text-gray-700">Account Name</label>
+                                                    class="block text-sm font-medium text-gray-700">Bank Account Name</label>
                                                 <input id="acc_name" name="acc_name" type="text"
                                                     class="block w-full rounded-md border-gray-300 shadow-sm"
                                                     value="{{ old('acc_name', $affiliateDetails->acc_name ?? '') }}"
@@ -90,7 +90,7 @@
 
                                             <div class="mb-4">
                                                 <label for="acc_no"
-                                                    class="block text-sm font-medium text-gray-700">Account
+                                                    class="block text-sm font-medium text-gray-700">Bank Account
                                                     Number</label>
                                                 <input id="acc_no" name="acc_no" type="text"
                                                     class="block w-full rounded-md border-gray-300 shadow-sm"

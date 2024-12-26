@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'affiliate_user', 'user'])->default('user'); // Add the role column
+            $table->enum('activity_status', ['active', 'inactive'])->default('active'); // Add the role column
             $table->rememberToken();
             $table->timestamps();
         });

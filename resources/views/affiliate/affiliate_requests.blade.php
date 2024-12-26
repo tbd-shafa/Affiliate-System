@@ -34,8 +34,8 @@
                             <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
                             <th class="border border-gray-300 px-4 py-2 text-left">User</th>
                             <th class="border border-gray-300 px-4 py-2 text-left">Address</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Account Name</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Account No</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Bank Account Name</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Bank Account No</th>
                             <th class="border border-gray-300 px-4 py-2 text-left">Bank Name</th>
                             <th class="border border-gray-300 px-4 py-2 text-left">Branch Address</th>
                             <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
