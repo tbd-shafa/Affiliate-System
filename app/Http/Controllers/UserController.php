@@ -6,7 +6,7 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\Role;
-use App\Models\AffiliateUser;
+// use App\Models\AffiliateUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

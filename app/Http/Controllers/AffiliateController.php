@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
 use App\Models\Commission;
 use App\Models\User;
+use App\Models\UserDetail;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -26,7 +28,7 @@ class AffiliateController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $request->validate([
             'address' => 'required|string|max:255',
             'acc_name' => 'required|string|max:255',
@@ -37,7 +39,7 @@ class AffiliateController extends Controller
         ]);
         // Fetch the authenticated user
         $user = auth()->user();
-        
+
         // Update existing user details if they exist
         $updated = \App\Models\UserDetail::where('user_id', $user->id)->update([
             'address' => $request->input('address'),
@@ -54,45 +56,51 @@ class AffiliateController extends Controller
     }
     public function showPendingRequests()
     {
-        //$pendingRequests = AffiliateUser::where('status', 'pending')->get();
-        $pendingRequests = AffiliateUser::where('status', 'pending')->paginate(10);
+        $pendingRequests = UserDetail::where('status', 'pending')->paginate(10);
         return view('affiliate.affiliate_requests', compact('pendingRequests'));
     }
 
 
+    // public function approveRequest(Request $request, $id)
+    // {
+    //     echo "<pre>";
+    //     print_r($request->all());
+    //     print_r($id);
+    //     die;
+    //     // Determine the action type
+    //     $actionType = $request->input('action_type');
+
+
+
+    //     // Get the email address of the user associated with the affiliate
+    //     $userEmail = $affiliateUser->user->email;
+    //     $referralCode = 
+
+
+    //     if ($actionType === 'approve') {
+    //         // Validate percentage field
+    //         $request->validate([
+    //             'percentage' => 'required|numeric|min:0|max:100',
+    //         ], [
+    //             'percentage.required' => 'The percentage field is required when approving.',
+    //         ]);
+
+
+    //         // Send approval email
+    //         $this->sendApprovalEmail($userEmail, true);
+
+    //         return redirect()->route('affiliate.requests')->with('success', 'Affiliate approved successfully with percentage set.');
+    //     }
+
+    //     return redirect()->back()->with('error', 'Invalid action type.');
+    // }
+
+
     public function approveRequest(Request $request, $id)
     {
+
         // Determine the action type
         $actionType = $request->input('action_type');
-
-        // Fetch affiliate user
-        $affiliateUser = AffiliateUser::findOrFail($id);
-
-        // Get the email address of the user associated with the affiliate
-        $userEmail = $affiliateUser->user->email;
-        $referralCode = encrypt($affiliateUser->user_id);
-        if ($actionType === 'submit_without_percentage') {
-
-            // Generate a unique registration link
-            $uniqueAffiliateLink = route('register') . '?referrer=' . $referralCode;
-
-            // Update affiliate user status and link
-            $affiliateUser->update([
-                'status' => 'approved',
-                'affiliate_link' => $uniqueAffiliateLink,
-            ]);
-            $affiliateUser->user->update([
-                'role' => 'affiliate_user',
-            ]);
-            Setting::updateOrCreate(
-                ['key' => $affiliateUser->user_id],
-                ['value' => 10]
-            );
-            // Send approval email
-            $this->sendApprovalEmail($userEmail, true);
-
-            return redirect()->route('affiliate.requests')->with('success', 'Affiliate approved successfully without setting a percentage.');
-        }
 
         if ($actionType === 'approve') {
             // Validate percentage field
@@ -102,48 +110,49 @@ class AffiliateController extends Controller
                 'percentage.required' => 'The percentage field is required when approving.',
             ]);
 
-            // Generate a unique registration link
-            $uniqueAffiliateLink = route('register') . '?referrer=' . $referralCode;
+            // Retrieve the affiliate request from the user_details table
+            $affiliateUser = UserDetail::findOrFail($id);
 
-            // Update affiliate user status and link
+            // Update the status and set a unique affiliate code
             $affiliateUser->update([
                 'status' => 'approved',
-                'affiliate_link' => $uniqueAffiliateLink,
+                'affiliate_code' => strtoupper(Str::random(10)), // Generate a unique code
             ]);
 
-            $affiliateUser->user->update([
-                'role' => 'affiliate_user',
-            ]);
-
-            // Save percentage in settings
-            Setting::updateOrCreate(
-                ['key' => $affiliateUser->user_id],
-                ['value' => $request->percentage]
-            );
+            // Get the email address of the user associated with the affiliate
+            $userEmail = $affiliateUser->user->email;
 
             // Send approval email
             $this->sendApprovalEmail($userEmail, true);
 
-            return redirect()->route('affiliate.requests')->with('success', 'Affiliate approved successfully with percentage set.');
+            return redirect()->route('affiliate.requests')->with('success', 'Affiliate Request approved successfully.');
         }
 
         return redirect()->back()->with('error', 'Invalid action type.');
     }
 
+
     public function rejectRequest($id)
     {
-        $affiliateUser = AffiliateUser::findOrFail($id);
-        $userEmail = $affiliateUser->user->email;
-        // Update status to rejected
-        $affiliateUser->update(['status' => 'rejected']);
-        // Send rejection email
-        $this->sendApprovalEmail($userEmail, false);
+       
+        $affiliateUser = UserDetail::findOrFail($id);
+
+            // Update the status and set a unique affiliate code
+            $affiliateUser->update([
+                'status' => 'rejected',
+            ]);
+
+            // Get the email address of the user associated with the affiliate
+            $userEmail = $affiliateUser->user->email;
+           
+            $this->sendApprovalEmail($userEmail, false);
 
         return redirect()->route('affiliate.requests')->with('success', 'Affiliate Request Rejected Successfully!');
     }
 
     private function sendApprovalEmail($email, $isApproved)
     {
+
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();

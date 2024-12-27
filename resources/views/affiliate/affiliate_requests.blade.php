@@ -5,9 +5,12 @@
         </h2>
     </x-slot>
 
+
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+
 
                 @if (session('success'))
                     <div x-data="{ open: true }" x-show="open" x-transition
@@ -28,64 +31,99 @@
                     </div>
                 @endif
 
-                <table class="w-full border-collapse border border-gray-200 bg-white shadow-sm">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">User</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Address</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Bank Account Name</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Bank Account No</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Bank Name</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Branch Address</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
 
-                        @forelse ($pendingRequests as $request)
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->id }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->user->name }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->address }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->acc_name }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->acc_no }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->bank_name }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->branch_address }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $request->status }}</td>
-                                <td class="border border-gray-300 px-4 py-2">
-                                    <!-- Approve Button -->
-                                    <button
-                                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                                        data-modal-target="#approveModal{{ $request->id }}">
-                                        Approve
-                                    </button>
-
-                                    <!-- Reject Button -->
-                                    <form method="POST" action="{{ route('affiliate.reject', $request->id) }}"
-                                        class="inline-block">
-                                        @csrf
-                                        <button type="submit"
-                                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                                            onclick="return confirm('Are you sure you want to reject this request?')">
-                                            Reject
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead class="bg-gray-50">
                             <tr>
-                                <td colspan="9" class="border px-4 py-2 text-center">No data found</td>
-                            </tr>
-                        @endforelse
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    #</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    User Name</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Address</th>
 
-                    </tbody>
-                </table>
-                <div class="mt-4">
-                    {{ $pendingRequests->links() }}
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Bank Account Name</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Bank Account No</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Bank Name</th>
+
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Phone No</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Branch Address</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            @forelse ($pendingRequests as $request)
+                                <tr class="border-t border-gray-200">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {{ $loop->iteration }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $request->user->name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $request->address }}
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $request->acc_name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $request->acc_no }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $request->bank_name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $request->phone_number }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $request->branch_address }}
+                                    </td>
+
+
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class=text-yellow-600 hover:text-yellow-900"
+                                            data-modal-target="#approveModal{{ $request->id }}">
+                                            Approve
+                                        </button>
+
+
+                                        <form method="POST" action="{{ route('affiliate.reject', $request->id) }}"
+                                            style="display: inline-block;">
+                                            @csrf
+                                            <button type="submit" class=text-red-600 hover:text-red-900 ml-4"
+                                                onclick="return confirm('Are you sure you want to reject this Request?')">
+                                                Reject
+                                            </button>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500">No Request
+                                        found.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
-                <!-- Approve Modal -->
+                {{ $pendingRequests->links() }}
                 @foreach ($pendingRequests as $request)
                     <div id="approveModal{{ $request->id }}"
                         class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center {{ $errors->has('percentage') && old('request_id') == $request->id ? '' : 'hidden' }}">
@@ -121,8 +159,7 @@
                                         </label>
                                         <input type="number" name="percentage" id="percentage{{ $request->id }}"
                                             class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('percentage') border-red-500 @enderror"
-                                            step="0.1" min="0" max="100"
-                                            value="{{ old('percentage') }}">
+                                            min="0" max="100" value="10">
                                         @error('percentage')
                                             <span class="text-red-600 text-sm">{{ $message }}</span>
                                         @enderror
@@ -133,12 +170,7 @@
                                     <input type="hidden" id="action_type{{ $request->id }}" name="action_type"
                                         value="">
 
-                                    <!-- Submit without Percentage -->
-                                    <button type="submit"
-                                        class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition"
-                                        onclick="document.getElementById('action_type{{ $request->id }}').value = 'submit_without_percentage';">
-                                        Submit with Default Percentage
-                                    </button>
+
                                     <!-- Approve Button -->
                                     <button type="submit"
                                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
