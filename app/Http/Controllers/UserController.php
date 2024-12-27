@@ -12,7 +12,10 @@ class UserController extends Controller
     // Dynamic index for any role
     public function index($role)
     {
-        $users = User::where('role', $role)->paginate(10);
+        $users = User::whereHas('roles', function ($query) use ($role) {
+            $query->where('name', $role);
+        })->paginate(10);
+
         return view('users.index', compact('users', 'role'));
     }
 
