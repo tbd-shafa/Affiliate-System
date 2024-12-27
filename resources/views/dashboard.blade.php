@@ -31,7 +31,7 @@
                         <h3>Welcome to Admin Panel</h3>
                         <p>Manage users and settings.</p>
                     @elseif (Auth::user()->roles->contains('name', 'user'))
-                       @php
+                        @php
                             $userDetails = Auth::user()->userDetail; // Assuming the relationship is defined in the User model
                         @endphp
                         @if ($userDetails->status === 'pending')
@@ -43,16 +43,14 @@
                         @endif
                     @elseif (Auth::user()->roles->contains('name', 'affiliate_user'))
                         @php
-                            $userDetails = Auth::user()->userDetail; // Assuming the relationship is defined in the User model
+                            $userDetails = Auth::user()->userDetail; // Ensure this is defined
                         @endphp
-                        @if ($userDetails->status === 'pending')
-                            <h3>Affiliate Request Pending</h3>
-                            <p>Your affiliate request is currently under review. Please check back later.</p>
-                        @else
-                            <h3>Welcome to Affiliate Panel</h3>
+                        <h3>Welcome to Affiliate Panel</h3>
+                        @if ($userDetails && $userDetails->status === 'approved')
+                            <p>Your affiliate link </p>
                             <p>Share your affiliate link for earnings.</p>
+                      
                         @endif
-
                     @endif
                 </div>
             </div>
