@@ -63,10 +63,6 @@ class AffiliateController extends Controller
         return view('affiliate.affiliate_requests', compact('pendingRequests'));
     }
 
-
-
-
-
     public function approveRequest(Request $request, $id)
     {
 

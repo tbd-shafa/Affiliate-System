@@ -22,7 +22,7 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
         <!-- Hidden input for referrer -->
-        <input type="hidden" name="referrer" value="{{ request()->query('referrer') }}">
+        
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />

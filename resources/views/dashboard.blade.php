@@ -27,32 +27,41 @@
                     </div>
                 @endif
                 <div class="p-6 text-gray-900">
-                    @if (Auth::user()->roles->contains('name', 'admin'))
+                    @php
+                        $roles = Auth::user()->roles->pluck('name')->toArray(); // Get all roles of the user as an array
+                        $userDetails = Auth::user()->userDetail; // Assuming the relationship is defined
+                    @endphp
+
+                    @if (in_array('admin', $roles))
                         <h3>Welcome to Admin Panel</h3>
                         <p>Manage users and settings.</p>
-                    @elseif (Auth::user()->roles->contains('name', 'user'))
-                        @php
-                            $userDetails = Auth::user()->userDetail; // Assuming the relationship is defined in the User model
-                        @endphp
-                        @if ($userDetails->status === 'pending')
+                    @elseif (in_array('affiliate_user', $roles))
+                        <h3>Welcome to Affiliate Panel</h3>
+                        @if ($userDetails && $userDetails->status === 'approved')
+                            @php
+                                // Generate the affiliate link
+                                $affiliateLink = url('/register') . '?referrer=' . $userDetails->affiliate_code;
+                            @endphp
+
+                            <p>Your affiliate link:</p>
+                            <p><a href="{{ $affiliateLink }}" target="_blank">{{ $affiliateLink }}</a></p>
+                            <p>Share your affiliate link for earnings.</p>
+                        @else
+                            <p>Your affiliate request is not approved yet.</p>
+                        @endif
+                    @elseif (in_array('user', $roles))
+                        @if ($userDetails && $userDetails->status === 'pending')
                             <h3>Affiliate Request Pending</h3>
                             <p>Your affiliate request is currently under review. Please check back later.</p>
                         @else
                             <h3>Welcome to User Panel</h3>
-                            <p>Share your affiliate link for earnings.</p>
                         @endif
-                    @elseif (Auth::user()->roles->contains('name', 'affiliate_user'))
-                        @php
-                            $userDetails = Auth::user()->userDetail; // Ensure this is defined
-                        @endphp
-                        <h3>Welcome to Affiliate Panel</h3>
-                        @if ($userDetails && $userDetails->status === 'approved')
-                            <p>Your affiliate link </p>
-                            <p>Share your affiliate link for earnings.</p>
-                      
-                        @endif
+                    @else
+                        <h3>Welcome</h3>
+                        <p>Your role is not recognized.</p>
                     @endif
                 </div>
+
             </div>
         </div>
     </div>

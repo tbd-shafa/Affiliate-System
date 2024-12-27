@@ -13,14 +13,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        $referrerCode = $request->query('referrer') ?: ''; // First check query, then cookie
+        if (!empty($referrerCode)) {
+            // Set the cookie for the referral code
+         
+            Cookie::queue('referrer_code', $referrerCode, 60 * 24); 
+        }
+
         return view('auth.register');
     }
 
@@ -52,21 +61,25 @@ class RegisteredUserController extends Controller
     //     return redirect(route('dashboard', absolute: false));
     // }
 
+    
     public function store(Request $request): RedirectResponse
     {
-
+      
+        // Validate input
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Create the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'activity_status' => 'active', // Default activity status
         ]);
+
 
         $userRole = Role::where('name', 'user')->first();
         if ($userRole) {
@@ -75,7 +88,8 @@ class RegisteredUserController extends Controller
                 'updated_at' => now(),
             ]);
         }
-        UserDetail::create([
+        // Create user details entry
+        $userDetails = UserDetail::create([
             'user_id' => $user->id,
             'address' => null,
             'acc_name' => null,
@@ -85,74 +99,42 @@ class RegisteredUserController extends Controller
             'phone_number' => null,
             'percentage_value' => null,
             'status' => 'just_created', // Default status
-            'affiliate_code' => null, // Not applicable for basic user registration
+            'affiliate_code' => null, // Generate a unique affiliate code
         ]);
 
 
-        event(new Registered($user));
+        $referrerCode = $request->query('referrer') ?: $request->cookie('referrer_code'); // First check query, then cookie
+   
+        // Save the referral code in a cookie if present
+        if ($referrerCode) {
+            // Set the cookie for the referral code
 
+            $referrerDetails = UserDetail::where('affiliate_code', $referrerCode)
+                ->where('status', 'approved')
+                ->first();
+
+            if ($referrerDetails) {
+                // Insert into affiliate_referrals table
+                DB::table('affiliate_referrals')->insert([
+                    'referrer_id' => $referrerDetails->user_id,
+                    'user_id' => $user->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                
+            }
+            $cookie = cookie('referrer_code', '', -1); // Clear the cookie
+        } 
+
+        // Trigger registration events
+        event(new Registered($user));
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect with cleared cookie
+        return redirect(route('dashboard', absolute: false))->withCookie($cookie);
     }
 
-    // public function store(Request $request): RedirectResponse
-    // {
 
-    //     $request->validate([
-    //         'name' => ['required', 'string', 'max:255'],
-    //         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-    //         'password' => ['required', 'confirmed', Rules\Password::defaults()],
-    //     ]);
-
-    //      if ($request->referrer !== null) {
-    //         $encryptedReferrerCode = $request->referrer;
-
-    //         try {
-    //             // Decrypt the referrer code to get the referrer ID
-    //             $referrerId = decrypt($encryptedReferrerCode);
-    //         } catch (\Exception $e) {
-    //             // Handle the case where decryption fails and redirect back with an error
-
-    //             return redirect()->back()->withErrors('Invalid or tampered referrer code.');
-    //         }
-
-    //         // Check if the referrer exists and is approved
-    //         $referrerUser = AffiliateUser::where('user_id', $referrerId)->first();
-
-    //         if (!$referrerUser || $referrerUser->status !== 'approved') {
-    //             // Redirect back with an error if referrer is invalid or unapproved
-
-    //             return redirect()->back()->withErrors('Invalid or unapproved referrer.');
-    //         }
-    //         $user = User::create([
-    //             'name' => $request->name,
-    //             'email' => $request->email,
-    //             'password' => Hash::make($request->password),
-    //             'role' => 'user',
-    //         ]);
-
-    //         if ($referrerId) {
-    //             // Link the new user to the referring affiliate
-    //             AffiliateReferral::create([
-    //                 'referrer_id' => $referrerId,
-    //                 'user_id' => $user->id,
-    //             ]);
-    //         }
-    //     }else{
-    //         $user = User::create([
-    //             'name' => $request->name,
-    //             'email' => $request->email,
-    //             'password' => Hash::make($request->password),
-    //             'role' => 'user',
-    //         ]);
-    //     }
-
-
-    //     event(new Registered($user));
-
-    //     Auth::login($user);
-
-    //     return redirect(route('dashboard', absolute: false));
-    // }
 }
+
+
