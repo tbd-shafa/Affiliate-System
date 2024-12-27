@@ -12,7 +12,9 @@ class Commission extends Model
     protected $fillable = [
         'user_id',
         'affiliate_user_id',
-        'amount',
+        'subscriptions_id',
+        'package_amount',
+        'earn_amount',
         'package_id',
         'percentage',
     ];
