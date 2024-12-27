@@ -36,150 +36,170 @@
                                         @method('PUT')
 
                                         <!-- Name -->
-                                        <div>
+                                        <div class="mb-4">
                                             <x-input-label for="name" :value="__('Name')" />
-                                            <x-text-input id="name" class="block mt-1 w-full" type="text"
-                                                name="name" :value="old('name', $user->name)" required autofocus
+                                            <x-text-input id="name" class="block mt-1 w-full p-2 border rounded"
+                                                type="text" name="name" :value="old('name', $user->name)" required autofocus
                                                 autocomplete="name" />
                                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                         </div>
 
                                         <!-- Email Address -->
-                                        <div class="mt-4">
+                                        <div class="mb-4">
                                             <x-input-label for="email" :value="__('Email')" />
-                                            <x-text-input id="email" class="block mt-1 w-full" type="email"
-                                                name="email" :value="old('email', $user->email)" required autocomplete="username" />
+                                            <x-text-input id="email" class="block mt-1 w-full p-2 border rounded"
+                                                type="email" name="email" :value="old('email', $user->email)" required
+                                                autocomplete="username" />
                                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                         </div>
 
-                                        <!-- Role -->
-                                        <!-- Role -->
-                                        <div class="mt-4">
-                                            <x-input-label for="role" :value="__('Role')" />
-                                            <select id="role" name="role"
-                                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50">
-                                                <option value="admin"
-                                                    {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin
-                                                </option>
-                                                <option value="affiliate_user"
-                                                    {{ old('role', $user->role) == 'affiliate_user' ? 'selected' : '' }}>
-                                                    Affiliate User</option>
-                                                <option value="user"
-                                                    {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>Normal
-                                                    User</option>
-                                            </select>
-                                            <x-input-error :messages="$errors->get('role')" class="mt-2" />
-                                        </div>
-
-                                        <!-- Affiliate User Fields -->
-                                        <div id="affiliate-fields" style="display: none;">
-                                            <div class="mb-4">
-                                                <label for="address"
-                                                    class="block text-sm font-medium text-gray-700">Address</label>
-                                                <textarea id="address" name="address" class="block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('address', $affiliateDetails->address ?? '') }}</textarea>
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label for="acc_name"
-                                                    class="block text-sm font-medium text-gray-700">Bank Account Name</label>
-                                                <input id="acc_name" name="acc_name" type="text"
-                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
-                                                    value="{{ old('acc_name', $affiliateDetails->acc_name ?? '') }}"
-                                                    required />
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label for="acc_no"
-                                                    class="block text-sm font-medium text-gray-700">Bank Account
-                                                    Number</label>
-                                                <input id="acc_no" name="acc_no" type="text"
-                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
-                                                    value="{{ old('acc_no', $affiliateDetails->acc_no ?? '') }}"
-                                                    required />
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label for="bank_name"
-                                                    class="block text-sm font-medium text-gray-700">Bank Name</label>
-                                                <input id="bank_name" name="bank_name" type="text"
-                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
-                                                    value="{{ old('bank_name', $affiliateDetails->bank_name ?? '') }}"
-                                                    required />
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label for="branch_address"
-                                                    class="block text-sm font-medium text-gray-700">Branch
-                                                    Address</label>
-                                                <input id="branch_address" name="branch_address" type="text"
-                                                    class="block w-full rounded-md border-gray-300 shadow-sm"
-                                                    value="{{ old('branch_address', $affiliateDetails->branch_address ?? '') }}"
-                                                    required />
+                                        <!-- Roles -->
+                                        <div class="mb-4">
+                                            <x-input-label :value="__('Assign Roles')" />
+                                            <div>
+                                                @foreach ($roles as $roleItem)
+                                                    <label class="inline-flex items-center">
+                                                        <input type="checkbox" name="roles[]"
+                                                            value="{{ $roleItem->name }}" class="role-checkbox"
+                                                            {{ in_array($roleItem->name, $userRoles) ? 'checked' : '' }}>
+                                                        <span class="ml-2">{{ ucfirst($roleItem->name) }}</span>
+                                                    </label>
+                                                @endforeach
                                             </div>
                                         </div>
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function() {
-                                                const roleSelect = document.getElementById('role');
-                                                const affiliateFields = document.getElementById('affiliate-fields');
-
-                                                // Function to toggle the visibility of affiliate fields
-                                                function toggleAffiliateFields() {
-                                                    if (roleSelect.value === 'affiliate_user') {
-                                                        affiliateFields.style.display = 'block';
-                                                    } else {
-                                                        affiliateFields.style.display = 'none';
-                                                    }
-                                                }
-
-                                                // Initial check on page load
-                                                toggleAffiliateFields();
-
-                                                // Add event listener to role select dropdown
-                                                roleSelect.addEventListener('change', toggleAffiliateFields);
-                                            });
-                                        </script>
-
 
                                         <!-- Password -->
-                                        <div class="mt-4">
+                                        <div class="mb-4">
                                             <x-input-label for="password" :value="__('Password')" />
-                                            <x-text-input id="password" class="block mt-1 w-full" type="password"
-                                                name="password" autocomplete="new-password" />
+                                            <x-text-input id="password" class="block mt-1 w-full p-2 border rounded"
+                                                type="password" name="password" autocomplete="new-password" />
                                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                         </div>
 
                                         <!-- Confirm Password -->
-                                        <div class="mt-4">
+                                        <div class="mb-4">
                                             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                                            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                                type="password" name="password_confirmation"
-                                                autocomplete="new-password" />
+                                            <x-text-input id="password_confirmation"
+                                                class="block mt-1 w-full p-2 border rounded" type="password"
+                                                name="password_confirmation" autocomplete="new-password" />
                                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                         </div>
 
+                                        <div id="affiliate-fields"
+                                            style="{{ in_array('affiliate_user', $userRoles) ? 'display: block;' : 'display: none;' }}">
 
+                                            <!-- Address -->
+                                            <div class="mb-4">
+                                                <x-input-label for="address" :value="__('Address')" />
+                                                <x-text-input id="address"
+                                                    class="block mt-1 w-full p-2 border rounded" type="text"
+                                                    name="address" :value="old('address', $userDetails->address ?? '')" required />
+                                                <x-input-error :messages="$errors->get('address')" class="mt-2" />
+                                            </div>
 
-                                        <div class="flex items-center justify-end mt-4 mb-4">
+                                            <!-- Bank Account Name -->
+                                            <div class="mb-4">
+                                                <x-input-label for="acc_name" :value="__('Bank Account Name')" />
+                                                <x-text-input id="acc_name"
+                                                    class="block mt-1 w-full p-2 border rounded" type="text"
+                                                    name="acc_name" :value="old('acc_name', $userDetails->acc_name ?? '')" required />
+                                                <x-input-error :messages="$errors->get('acc_name')" class="mt-2" />
+                                            </div>
 
-                                            <a href="{{ route('users.index', ['role' => strtolower($role)]) }}"
-                                                class="inline-flex items-center bg-gray-300 text-black hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-4 py-2">
-                                                Back to
-                                                @if ($role == 'affiliate_user')
-                                                    Affiliate User List
-                                                @elseif($role == 'admin')
-                                                    Admin User List
-                                                @else
-                                                    Normal Users List
-                                                @endif
-                                            </a>
+                                            <!-- Bank Account Number -->
+                                            <div class="mb-4">
+                                                <x-input-label for="acc_no" :value="__('Bank Account Number')" />
+                                                <x-text-input id="acc_no"
+                                                    class="block mt-1 w-full p-2 border rounded" type="number"
+                                                    name="acc_no" :value="old('acc_no', $userDetails->acc_no ?? '')" required />
+                                                <x-input-error :messages="$errors->get('acc_no')" class="mt-2" />
+                                            </div>
 
-                                            <button type="submit"
-                                                class="ml-4 inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">
-                                                Update
-                                            </button>
+                                            <!-- Bank Name -->
+                                            <div class="mb-4">
+                                                <x-input-label for="bank_name" :value="__('Bank Name')" />
+                                                <x-text-input id="bank_name"
+                                                    class="block mt-1 w-full p-2 border rounded" type="text"
+                                                    name="bank_name" :value="old('bank_name', $userDetails->bank_name ?? '')" required />
+                                                <x-input-error :messages="$errors->get('bank_name')" class="mt-2" />
+                                            </div>
+
+                                            <!-- Branch Address -->
+                                            <div class="mb-4">
+                                                <x-input-label for="branch_address" :value="__('Branch Address')" />
+                                                <x-text-input id="branch_address"
+                                                    class="block mt-1 w-full p-2 border rounded" type="text"
+                                                    name="branch_address" :value="old(
+                                                        'branch_address',
+                                                        $userDetails->branch_address ?? '',
+                                                    )" required />
+                                                <x-input-error :messages="$errors->get('branch_address')" class="mt-2" />
+                                            </div>
+
+                                            <!-- Phone Number -->
+                                            <div class="mb-4">
+                                                <x-input-label for="phone_number" :value="__('Phone Number')" />
+                                                <x-text-input id="phone_number"
+                                                    class="block mt-1 w-full p-2 border rounded" type="number"
+                                                    name="phone_number" :value="old('phone_number', $userDetails->phone_number ?? '')" required />
+                                                <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
+                                            </div>
+
+                                            <!-- Commision Percentage Value -->
+                                            <div class="mb-4">
+                                                <x-input-label for="percentage_value" :value="__('Commision Percentage Value')" />
+                                                <x-text-input id="percentage_value"
+                                                    class="block mt-1 w-full p-2 border rounded" type="number"
+                                                    name="percentage_value" :value="old(
+                                                        'percentage_value',
+                                                        $userDetails->percentage_value ?? 10,
+                                                    )" required />
+                                                <x-input-error :messages="$errors->get('percentage_value')" class="mt-2" />
+                                            </div>
+
                                         </div>
 
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                const affiliateFields = document.getElementById('affiliate-fields');
+                                                const roleCheckboxes = document.querySelectorAll('.role-checkbox');
+                                                const affiliateInputs = affiliateFields.querySelectorAll('input');
+
+                                                function toggleAffiliateFields() {
+                                                    const isAffiliateChecked = Array.from(roleCheckboxes).some(
+                                                        checkbox => checkbox.checked && checkbox.value === 'affiliate_user'
+                                                    );
+
+                                                    if (isAffiliateChecked) {
+                                                        affiliateFields.style.display = 'block';
+                                                        affiliateInputs.forEach(input => {
+                                                            input.setAttribute('required', 'required');
+                                                        });
+                                                    } else {
+                                                        affiliateFields.style.display = 'none';
+                                                        affiliateInputs.forEach(input => {
+                                                            input.removeAttribute('required');
+                                                        });
+                                                    }
+                                                }
+
+                                                roleCheckboxes.forEach(checkbox => {
+                                                    checkbox.addEventListener('change', toggleAffiliateFields);
+                                                });
+
+                                                // Initialize on page load
+                                                toggleAffiliateFields();
+                                            });
+                                        </script>
+
+                                        <div class="flex items-center justify-end mt-4">
+                                            <button type="submit"
+                                                class="inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">
+                                                Update User
+                                            </button>
+                                        </div>
                                     </form>
+
 
                                 </div>
                             </div>

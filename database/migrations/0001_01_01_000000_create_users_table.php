@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('activity_status', ['active', 'inactive'])->default('active'); // Add the role column
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes(); // Deleted at timestamp for soft deletes
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

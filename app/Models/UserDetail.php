@@ -16,4 +16,9 @@ class UserDetail extends Model
         'user_id', 'address', 'acc_name', 'acc_no', 'bank_name', 'branch_address', 
         'phone_number', 'percentage_value', 'status', 'affiliate_code'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
