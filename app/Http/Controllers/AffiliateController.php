@@ -26,23 +26,28 @@ class AffiliateController extends Controller
 
     public function store(Request $request)
     {
+        
         $request->validate([
             'address' => 'required|string|max:255',
             'acc_name' => 'required|string|max:255',
             'acc_no' => 'required|string|max:20',
+            'phone_number' => 'required|string|max:255',
             'bank_name' => 'required|string|max:255',
             'branch_address' => 'required|string|max:255',
         ]);
-
-        AffiliateUser::create([
-            'user_id' => Auth::id(),
-            'address' => $request->address,
-            'acc_name' => $request->acc_name,
-            'acc_no' => $request->acc_no,
-            'bank_name' => $request->bank_name,
-            'branch_address' => $request->branch_address,
-            'status' => 'pending',
-            'affiliate_link' => null,
+        // Fetch the authenticated user
+        $user = auth()->user();
+        
+        // Update existing user details if they exist
+        $updated = \App\Models\UserDetail::where('user_id', $user->id)->update([
+            'address' => $request->input('address'),
+            'acc_name' => $request->input('acc_name'),
+            'acc_no' => $request->input('acc_no'),
+            'phone_number' => $request->input('phone_number'),
+            'bank_name' => $request->input('bank_name'),
+            'branch_address' => $request->input('branch_address'),
+            'status' => 'pending', // Set status to pending
+            'affiliate_code' => null,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Affiliate request submitted successfully!');
@@ -192,8 +197,8 @@ class AffiliateController extends Controller
         // })->paginate(10);
         $referredUsers = User::whereIn('id', function ($query) use ($userId) {
             $query->select('user_id')
-                  ->from('affiliate_referrals')
-                  ->where('referrer_id', $userId); // Match the referrer_id
+                ->from('affiliate_referrals')
+                ->where('referrer_id', $userId); // Match the referrer_id
         })->paginate(10);
 
         return view('affiliate.referred_users', compact('referredUsers'));

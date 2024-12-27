@@ -31,11 +31,28 @@
                         <h3>Welcome to Admin Panel</h3>
                         <p>Manage users and settings.</p>
                     @elseif (Auth::user()->roles->contains('name', 'user'))
-                        <h3>Welcome to User Panel</h3>
-                        <p>Explore subscription plans and become an affiliate.</p>
+                       @php
+                            $userDetails = Auth::user()->userDetail; // Assuming the relationship is defined in the User model
+                        @endphp
+                        @if ($userDetails->status === 'pending')
+                            <h3>Affiliate Request Pending</h3>
+                            <p>Your affiliate request is currently under review. Please check back later.</p>
+                        @else
+                            <h3>Welcome to User Panel</h3>
+                            <p>Share your affiliate link for earnings.</p>
+                        @endif
                     @elseif (Auth::user()->roles->contains('name', 'affiliate_user'))
-                        <h3>Welcome to Affiliate Panel</h3>
-                        <p>View your affiliate link and earnings.</p>
+                        @php
+                            $userDetails = Auth::user()->userDetail; // Assuming the relationship is defined in the User model
+                        @endphp
+                        @if ($userDetails->status === 'pending')
+                            <h3>Affiliate Request Pending</h3>
+                            <p>Your affiliate request is currently under review. Please check back later.</p>
+                        @else
+                            <h3>Welcome to Affiliate Panel</h3>
+                            <p>Share your affiliate link for earnings.</p>
+                        @endif
+
                     @endif
                 </div>
             </div>
