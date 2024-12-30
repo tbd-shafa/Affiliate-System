@@ -176,8 +176,8 @@ class AffiliateController extends Controller
     public function commissionBalance()
     {
         $userId = auth()->user()->id;
-        $totalCommission = Commission::where('affiliate_user_id', $userId)->sum('amount');
-
+        $totalCommission = Commission::where('affiliate_user_id', $userId)->sum('earn_amount');
+       
         return view('affiliate.commission_balance', compact('totalCommission'));
     }
 
@@ -186,16 +186,21 @@ class AffiliateController extends Controller
     {
         $userId = auth()->user()->id;
 
-        // Get the list of users whose `user_id` exists in the `commissions` table and matches the authenticated user as the affiliate
-        // $referredUsers = User::whereHas('commissions', function ($query) use ($userId) {
-        //     $query->where('affiliate_user_id', $userId); // Match affiliate_user_id with the logged-in user
+        // $referredUsers = User::whereIn('id', function ($query) use ($userId) {
+        //     $query->select('user_id')
+        //         ->from('affiliate_referrals')
+        //         ->where('referrer_id', $userId); // Match the referrer_id
         // })->paginate(10);
-        $referredUsers = User::whereIn('id', function ($query) use ($userId) {
+        
+        $referredUsers = User::whereIn('users.id', function ($query) use ($userId) {
             $query->select('user_id')
                 ->from('affiliate_referrals')
                 ->where('referrer_id', $userId); // Match the referrer_id
-        })->paginate(10);
-
+        })
+        ->leftJoin('commissions', 'users.id', '=', 'commissions.user_id') // Join commissions to get earned_amount
+        ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'commissions.earn_amount') // Select the columns you need
+        ->paginate(10);
+        
         return view('affiliate.referred_users', compact('referredUsers'));
     }
 

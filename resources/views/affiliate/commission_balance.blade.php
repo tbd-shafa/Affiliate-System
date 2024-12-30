@@ -9,7 +9,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="overflow-x-auto">
                     <h2>Current Commission Balance</h2>
-                    <p>Total Commission: ${{ number_format($totalCommission, 2) }}</p>
+                    <p>Total Earned Commission: ${{ number_format($totalCommission, 2) }}</p>
 
                 </div>
 

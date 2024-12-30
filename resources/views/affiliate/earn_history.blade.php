@@ -1,12 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-
             Earh History List
-
         </h2>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -19,16 +16,20 @@
                                     #</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Amount</th>
+                                    Earned At</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Earned Amount</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Package Amount</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Package</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Percentage</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Earned At</th>
+
                             </tr>
                         </thead>
                         <tbody class="bg-white">
@@ -36,17 +37,21 @@
                                 <tr class="border-t border-gray-200">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ $loop->iteration }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($history->amount, 2) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $history->subscriptionPlan ? $history->subscriptionPlan->name : 'N/A' }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                       {{ $history->percentage }}%
-                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $history->created_at->format('Y-m-d') }}
                                     </td>
-
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        ${{ number_format($history->earn_amount, 2) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        ${{ number_format($history->package_amount, 2) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $history->subscriptionPlan ? $history->subscriptionPlan->name : 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $history->percentage }}%
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
