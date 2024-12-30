@@ -57,11 +57,12 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $item->percentage ? $item->percentage . '%' : 'N/A' }}
+                                    
+                                        {{ $item->percentage_value ? $item->percentage_value . '%' : 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         
-                                        <a href="{{ route('commission.edit', $item->key) }}"
+                                        <a href="{{ route('commission.edit', $item->id) }}"
                                             class="text-yellow-600 hover:text-yellow-900">Edit</a>
                                     </td>
                                 </tr>

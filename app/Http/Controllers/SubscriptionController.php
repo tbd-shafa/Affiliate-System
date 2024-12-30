@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AffiliateUser;
 use App\Models\AffiliateReferral;
-use App\Models\Setting;
+use App\Models\UserDetail;
 use App\Models\Commission;
 use App\Models\Subscription;
 use App\Models\User;
@@ -83,36 +83,46 @@ class SubscriptionController extends Controller
 
     public function viewCommisionPercentage()
     {
-        
-        // Fetch users with their percentage from the `settings` table
-        $data = Setting::leftJoin('users', 'settings.key', '=', 'users.id') // Join settings with users
-            ->select('settings.key', 'users.name', 'settings.value as percentage') // Select relevant fields
+
+        $data = User::join('user_details', 'users.id', '=', 'user_details.user_id')
+            ->where('user_details.status', 'approved')
+            ->select('users.id', 'users.name', 'user_details.percentage_value')
             ->paginate(10);
 
         return view('subscriptions.percentage', compact('data'));
     }
     public function editCommisionPercentage($id)
     {
-        $user = Setting::leftJoin('users', 'settings.key', '=', 'users.id')
-            ->select('settings.key as user_id', 'users.name', 'settings.value as percentage')
-            ->where('settings.key', $id)
+
+
+        $user = User::join('user_details', 'users.id', '=', 'user_details.user_id')
+            ->where('users.id', $id)
+            ->where('user_details.status', 'approved')
+            ->select('users.id', 'users.name', 'user_details.percentage_value')
             ->firstOrFail();
 
         return view('subscriptions.percentage_edit', compact('user'));
     }
 
-    public function updateCommisionPercentage(Request $request)
+   
+
+    public function updateCommisionPercentage(Request $request, $id)
     {
+       
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            
             'percentage' => 'required|numeric|min:0|max:100',
         ]);
 
-        // Update or create a new record in the settings table
-        Setting::updateOrCreate(
-            ['key' => $request->user_id],
-            ['value' => $request->percentage]
-        );
+        // Find the user's details and update the percentage value
+        $userDetails = UserDetail::where('user_id', $id)->first();
+
+        if ($userDetails) {
+            $userDetails->percentage_value = $request->percentage;
+            $userDetails->save();
+        } else {
+            return redirect()->route('commission.percentage')->withErrors(['error' => 'User details not found.']);
+        }
 
         return redirect()->route('commission.percentage')->with('success', 'Commission percentage updated successfully.');
     }
