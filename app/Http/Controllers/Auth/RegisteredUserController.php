@@ -16,22 +16,30 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 
+
 class RegisteredUserController extends Controller
 {
+
     /**
      * Display the registration view.
      */
-    public function create(Request $request): View
+    public function create(Request $request)
     {
-        $referrerCode = $request->query('referrer') ?: ''; // First check query, then cookie
-        if (!empty($referrerCode)) {
-            // Set the cookie for the referral code
-
-            Cookie::queue('referrer_code', $referrerCode, 60 * 24);
-        }
-
+        // Your existing logic...
         return view('auth.register');
     }
+
+    // public function create(Request $request): View
+    // {
+    //     $referrerCode = $request->query('referrer') ?: ''; // First check query, then cookie
+    //     if (!empty($referrerCode)) {
+    //         // Set the cookie for the referral code
+
+    //         Cookie::queue('referrer_code', $referrerCode, 60 * 24);
+    //     }
+
+    //     return view('auth.register');
+    // }
 
     /**
      * Handle an incoming registration request.

@@ -44,7 +44,7 @@
                                         {{ $user->created_at->format('Y-m-d') }}
                                     </td>
                                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                     {{ $user->earn_amount ? number_format($user->earn_amount, 2) : 'N/A' }}
+                                     ${{ $user->earn_amount ? number_format($user->earn_amount, 2) : '00.00' }}
 
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->name }}

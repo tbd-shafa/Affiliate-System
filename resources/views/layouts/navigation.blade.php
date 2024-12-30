@@ -1,4 +1,15 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<style>
+.text-disabled {
+    color: #9ca3af; /* A light gray color for disabled state */
+    cursor: not-allowed;
+    opacity: 0.6; /* Makes it visually distinct as disabled */
+    pointer-events: none; /* Prevents interaction */
+}
+.max-w-7xl {
+    max-width: 86rem !important;
+}
+</style>
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -71,8 +82,8 @@
                         </x-nav-link>
                     @else
                         <!-- Disabled Become an Affiliate button for 'pending', 'approved', or 'Deleted' statuses -->
-                        <x-nav-link class="text-gray-500 cursor-not-allowed pointer-events-none" :active="request()->routeIs('affiliate.create')">
-                            {{ __('Become Affiliate (Disabled)') }}
+                        <x-nav-link class="text-gray-500 cursor-not-allowed pointer-events-none text-disabled" :active="request()->routeIs('affiliate.create')">
+                            {{ __('Become Affiliate') }}
                         </x-nav-link>
                     @endif
                 @endif
