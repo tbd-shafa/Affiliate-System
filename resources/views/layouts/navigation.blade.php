@@ -17,99 +17,90 @@
                     </x-nav-link>
                 </div>
             </div>
-            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <!-- Role-Based Menu -->
-               
-                 @if (Auth::user()->roles->contains('name', 'admin'))
-                    <div class="hidden sm:flex sm:items-center sm:ms-6">
-                        <x-dropdown align="right" width="48">
-                            <x-slot name="trigger">
-                                <button
-                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                    <div>Users</div>
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                @if (Auth::user()->roles->contains('name', 'admin'))
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                <div>Users</div>
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
 
-                                    <div class="ms-1">
-                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('users.index', ['role' => 'admin'])">
+                                {{ __('Admin Users') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('users.index', ['role' => 'affiliate_user'])">
+                                {{ __('Affiliate Users') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('users.index', ['role' => 'user'])">
+                                {{ __('Normal Users') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
 
-                            <x-slot name="content">
-                                <x-dropdown-link :href="route('users.index', ['role' => 'admin'])">
-                                    {{ __('Admin Users') }}
-                                </x-dropdown-link>
+                    <x-nav-link href="{{ route('affiliate.requests') }}" :active="request()->routeIs('affiliate.requests')">
+                        {{ __('Affiliate Request') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('commission.percentage') }}" :active="request()->routeIs('commission.percentage')">
+                        {{ __('Commission Percentage') }}
+                    </x-nav-link>
+                @endif
 
-                                <x-dropdown-link :href="route('users.index', ['role' => 'affiliate_user'])">
-                                    {{ __('Affiliate Users') }}
-                                </x-dropdown-link>
-
-                                <x-dropdown-link :href="route('users.index', ['role' => 'user'])">
-                                    {{ __('Normal Users') }}
-                                </x-dropdown-link>
-
-                            </x-slot>
-                        </x-dropdown>
-
-                       
-                        <x-nav-link href="{{ route('affiliate.requests') }}" :active="request()->routeIs('affiliate.requests')">
-                            {{ __('Affiliate Request') }}
-                        </x-nav-link>
-
-                         <x-nav-link href="{{ route('commission.percentage') }}" :active="request()->routeIs('commission.percentage')">
-                            {{ __(' Commission Percentage') }}
-                        </x-nav-link>
-
-
-                    </div>
-                @elseif (Auth::user()->roles->contains('name', 'user'))
+                @if (Auth::user()->roles->contains('name', 'user') || Auth::user()->roles->contains('name', 'affiliate_user'))
+                    <!-- Buy Subscription Plan button -->
                     <x-nav-link href="{{ route('subscriptions.index') }}" :active="request()->routeIs('subscription')">
                         {{ __('Buy Subscription Plan') }}
                     </x-nav-link>
-                  
-                    
-                    <!-- Show "Become an Affiliate" button only if status is not 'pending' or 'approved' -->
-                    
-                    @if (!Auth::user()->affiliateUser || !in_array(Auth::user()->affiliateUser->status, ['pending', 'approved']))
+                @endif
+
+                @if (Auth::user()->roles->contains('name', 'user'))
+                    <!-- Become an Affiliate button (for users only) -->
+                    @if (!Auth::user()->affiliateUser || !in_array(Auth::user()->affiliateUser->status, ['pending', 'approved', 'Deleted']))
                         <x-nav-link href="{{ route('affiliate.create') }}" :active="request()->routeIs('affiliate.create')">
-                            {{ __('Become an Affiliate') }}
+                            {{ __('Become Affiliate') }}
+                        </x-nav-link>
+                    @else
+                        <!-- Disabled Become an Affiliate button for 'pending', 'approved', or 'Deleted' statuses -->
+                        <x-nav-link class="text-gray-500 cursor-not-allowed pointer-events-none" :active="request()->routeIs('affiliate.create')">
+                            {{ __('Become Affiliate (Disabled)') }}
                         </x-nav-link>
                     @endif
-                @elseif (Auth::user()->roles->contains('name', 'affiliate_user'))
+                @endif
+
+                @if (Auth::user()->roles->contains('name', 'affiliate_user') && !Auth::user()->affiliateUser)
+                    <!-- This is to prevent the "Become an Affiliate" button from showing for affiliate users who are already affiliates -->
+                    <x-nav-link href="{{ route('affiliate.create') }}" :active="request()->routeIs('affiliate.create')">
+                        {{ __('Become Affiliate') }}
+                    </x-nav-link>
+                @endif
+
+                @if (Auth::user()->roles->contains('name', 'affiliate_user'))
+                    <!-- Affiliate-specific links -->
                     @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                       <x-nav-link href="{{ Auth::user()->affiliateUser->affiliate_link }}"  target="_blank" :active="request()->routeIs('affiliate-link')">
-                            {{ __('Affiliate Link ') }}
+                        <x-nav-link href="{{ route('affiliate.commission.balance') }}" :active="request()->routeIs('affiliate-link')">
+                            {{ __('Current Commission Balance') }}
                         </x-nav-link>
-                    @endif
-                    @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                       <x-nav-link href="{{ route('affiliate.commission.balance') }}" :active="request()->routeIs('affiliate-link')">
-                            {{ __('Current commission balance') }}
+                        <x-nav-link href="{{ route('affiliate.referred.users') }}" :active="request()->routeIs('affiliate-link')">
+                            {{ __('Referred Users') }}
                         </x-nav-link>
-                    @endif
-                    @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                       <x-nav-link href="{{ route('affiliate.referred.users') }}" :active="request()->routeIs('affiliate-link')">
-                            {{ __('Referred users') }}
-                        </x-nav-link>
-                    @endif
-                    @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                       <x-nav-link href="{{ route('affiliate.earn.history') }}"  :active="request()->routeIs('affiliate-link')">
+                        <x-nav-link href="{{ route('affiliate.earn.history') }}" :active="request()->routeIs('affiliate-link')">
                             {{ __('Earn History') }}
                         </x-nav-link>
                     @endif
-
-                    <!-- Show "Become an Affiliate" button only if status is not 'pending' or 'approved' -->
-                    @if (!Auth::user()->affiliateUser || !in_array(Auth::user()->affiliateUser->status, ['pending', 'approved']))
-                        <x-nav-link href="{{ route('affiliate.create') }}" :active="request()->routeIs('affiliate.create')">
-                            {{ __('Become an Affiliate') }}
-                        </x-nav-link>
-                    @endif
-
                 @endif
+
             </div>
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
