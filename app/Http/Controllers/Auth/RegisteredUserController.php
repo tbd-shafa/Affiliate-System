@@ -25,21 +25,26 @@ class RegisteredUserController extends Controller
      */
     public function create(Request $request)
     {
+        $referrerCode = $request->query('referrer');
+
+        if (!empty($referrerCode)) {
+            // Store the referral code in a cookie
+
+            //Cookie::queue('referrer_code', $referrerCode, 60 * 24 * 7); // Valid for 7 days
+
+
+            // Redirect to the register page without the referral code in the URL
+            return redirect()->route('register');
+        }
         // Your existing logic...
         return view('auth.register');
     }
-
-    // public function create(Request $request): View
+    // public function create(Request $request)
     // {
-    //     $referrerCode = $request->query('referrer') ?: ''; // First check query, then cookie
-    //     if (!empty($referrerCode)) {
-    //         // Set the cookie for the referral code
-
-    //         Cookie::queue('referrer_code', $referrerCode, 60 * 24);
-    //     }
-
+       
     //     return view('auth.register');
     // }
+
 
     /**
      * Handle an incoming registration request.
