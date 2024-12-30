@@ -1,11 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Affiliate Request List
-        </h2>
-    </x-slot>
-
-
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -33,6 +26,12 @@
 
 
                 <div class="overflow-x-auto">
+                    <div class="flex items-center justify-between " style="padding:10px;">
+                        <h2 class="font-bold text-xl text-gray-800 leading-tight">
+                            Affiliate Request List
+                        </h2>
+
+                    </div>
                     <table class="min-w-full table-auto">
                         <thead class="bg-gray-50">
                             <tr>
@@ -123,7 +122,10 @@
                         </tbody>
                     </table>
                 </div>
-                {{ $pendingRequests->links() }}
+                <div class="mt-4 px-4 py-4">
+                    {{ $pendingRequests->links() }}
+                </div>
+
                 @foreach ($pendingRequests as $request)
                     <div id="approveModal{{ $request->id }}"
                         class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center {{ $errors->has('percentage') && old('request_id') == $request->id ? '' : 'hidden' }}">

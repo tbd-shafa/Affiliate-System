@@ -1,25 +1,36 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            @if ($role == 'user')
-                Normal User List
-            @else
-                {{ ucfirst($role) }} Users List
-            @endif
-        </h2>
-    </x-slot>
 
+    
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <a href="{{ route('users.create', ['role' => strtolower($role)]) }}"
-                    class="inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7H5" />
-                    </svg>
-                    Create {{ $role }} User
-                </a>
+                <div class="flex items-center justify-between " style="padding:15px;">
+                    <h2 class="font-bold text-xl text-gray-800 leading-tight">
+                        @if ($role == 'user')
+                            Normal User List
+                        @elseif($role == 'affiliate_user')
+                            Affiliate Users List
+                        @elseif($role == 'admin')
+                            Admin Users List
+                        @endif
+                    </h2>
+                    <a href="{{ route('users.create', ['role' => strtolower($role)]) }}"
+                        class="inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7H5" />
+                        </svg>
+                        Create
+                        @if ($role == 'user')
+                            Normal User
+                        @elseif($role == 'affiliate_user')
+                            Affiliate User
+                        @elseif($role == 'admin')
+                            Admin User
+                        @endif
+                    </a>
+                </div>
+
 
 
                 @if (session('success'))
@@ -94,7 +105,10 @@
                         </tbody>
                     </table>
                 </div>
-                {{ $users->links() }}
+                <div class="mt-4 px-4 py-4">
+                    {{ $users->links() }}
+                </div>
+
             </div>
         </div>
     </div>
