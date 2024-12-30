@@ -26,8 +26,8 @@ class RegisteredUserController extends Controller
         $referrerCode = $request->query('referrer') ?: ''; // First check query, then cookie
         if (!empty($referrerCode)) {
             // Set the cookie for the referral code
-         
-            Cookie::queue('referrer_code', $referrerCode, 60 * 24); 
+
+            Cookie::queue('referrer_code', $referrerCode, 60 * 24);
         }
 
         return view('auth.register');
@@ -61,10 +61,10 @@ class RegisteredUserController extends Controller
     //     return redirect(route('dashboard', absolute: false));
     // }
 
-    
+
     public function store(Request $request): RedirectResponse
     {
-      
+
         // Validate input
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -104,7 +104,7 @@ class RegisteredUserController extends Controller
 
 
         $referrerCode = $request->query('referrer') ?: $request->cookie('referrer_code'); // First check query, then cookie
-   
+
         // Save the referral code in a cookie if present
         if ($referrerCode) {
             // Set the cookie for the referral code
@@ -121,23 +121,20 @@ class RegisteredUserController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-                
             }
             $cookie = cookie('referrer_code', '', -1); // Clear the cookie
-        } 
+            // Trigger registration events
+            event(new Registered($user));
+            Auth::login($user);
 
-        // Trigger registration events
-        event(new Registered($user));
-        Auth::login($user);
+            // Redirect with cleared cookie
+            return redirect(route('dashboard', absolute: false))->withCookie($cookie);
+        } else {
+            event(new Registered($user));
 
-        // Redirect with cleared cookie
-        //return redirect(route('dashboard', absolute: false))->withCookie($cookie);
-        return $cookie 
-        ? redirect(route('dashboard', absolute: false))->withCookie($cookie) 
-        : redirect(route('dashboard', absolute: false));
+            Auth::login($user);
+
+            return redirect(route('dashboard', absolute: false));
+        }
     }
-
-
 }
-
-
