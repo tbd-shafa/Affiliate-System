@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/affiliate/commission-balance', [AffiliateController::class, 'commissionBalance'])->name('affiliate.commission.balance');
     Route::get('/affiliate/referred-users', [AffiliateController::class, 'referredUsers'])->name('affiliate.referred.users');
     Route::get('/affiliate/earn-history', [AffiliateController::class, 'earnHistory'])->name('affiliate.earn.history');
+    Route::get('/affiliate/panel', [AffiliateController::class, 'panel'])->name('affiliate.panel');
+    Route::get('/affiliate/link', [AffiliateController::class, 'link'])->name('affiliate.link');
 
 
     // Manage subscription

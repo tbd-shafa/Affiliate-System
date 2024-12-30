@@ -28,7 +28,19 @@ class AffiliateController extends Controller
     {
         return view('affiliate.create');
     }
+    public function panel()
+    {
+        return view('affiliate.affiliate-panel');
+    }
 
+    public function link()
+    {
+        if (request()->ajax()) {
+            return view('affiliate.affiliate-link'); // Return partial view for AJAX
+        }
+        return view('affiliate.affiliate-link');
+    }
+    
     public function store(Request $request)
     {
 
