@@ -131,7 +131,10 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // Redirect with cleared cookie
-        return redirect(route('dashboard', absolute: false))->withCookie($cookie);
+        //return redirect(route('dashboard', absolute: false))->withCookie($cookie);
+        return $cookie 
+        ? redirect(route('dashboard', absolute: false))->withCookie($cookie) 
+        : redirect(route('dashboard', absolute: false));
     }
 
 
