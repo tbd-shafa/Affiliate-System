@@ -43,8 +43,7 @@
                                 $affiliateLink = url('/register') . '?referrer=' . $userDetails->affiliate_code;
                             @endphp
 
-                            <p>Your affiliate link:</p>
-                            <p><a href="{{ $affiliateLink }}" target="_blank">{{ $affiliateLink }}</a></p>
+                            <p>Your affiliate link: <a href="{{ $affiliateLink }}" target="_blank">{{ $affiliateLink }}</a></p>
                             <p>Share your affiliate link for earnings.</p>
                         @else
                             <p>Your affiliate request is not approved yet.</p>
