@@ -40,11 +40,29 @@
             document.querySelectorAll('.copy-link-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const link = button.getAttribute('data-link');
-                    navigator.clipboard.writeText(link).then(() => {
-                        alert('Affiliate link copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Failed to copy affiliate link: ', err);
-                    });
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(link)
+                            .then(() => {
+                                alert('Affiliate link copied to clipboard!');
+                            })
+                            .catch(err => {
+                                console.error('Failed to copy affiliate link: ', err);
+                            });
+                    } else {
+                        // Fallback for insecure contexts or older browsers
+                        const textArea = document.createElement('textarea');
+                        textArea.value = link;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        try {
+                            document.execCommand('copy');
+                            alert('Affiliate link copied to clipboard!');
+                        } catch (err) {
+                            console.error('Fallback: Unable to copy', err);
+                        }
+                        document.body.removeChild(textArea);
+                    }
                 });
             });
         }
@@ -52,39 +70,49 @@
         document.addEventListener('DOMContentLoaded', () => {
             const contentArea = document.getElementById('affiliate-content');
 
-            document.querySelectorAll('.load-content').forEach(link => {
-                link.addEventListener('click', event => {
-                    event.preventDefault();
+            // Function to handle loading content
+            function loadContent(event) {
+                event.preventDefault();
 
-                    const url = link.getAttribute('data-url');
+                const url = event.currentTarget.getAttribute('data-url');
 
-                    // Fetch content via AJAX
-                    fetch(url, {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                            },
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch content');
-                            }
-                            return response.text();
-                        })
-                        .then(html => {
-                            contentArea.innerHTML = html;
+                // Fetch content via AJAX
+                fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch content');
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        contentArea.innerHTML = html;
 
-                            // Reinitialize copy buttons after new content loads
-                            initializeCopyButtons();
-                        })
-                        .catch(error => {
-                            console.error('Error loading content:', error);
-                            contentArea.innerHTML = '<p>Error loading content.</p>';
-                        });
+                        // Reinitialize copy buttons after new content loads
+                        initializeCopyButtons();
+                    })
+                    .catch(error => {
+                        console.error('Error loading content:', error);
+                        contentArea.innerHTML = '<p class="text-red-500">Error loading content.</p>';
+                    });
+            }
+
+            // Initialize left menu event listeners
+            function initializeMenuListeners() {
+                document.querySelectorAll('.load-content').forEach(link => {
+                    link.removeEventListener('click', loadContent); // Remove any existing event listener
+                    link.addEventListener('click', loadContent); // Add a fresh event listener
                 });
-            });
+            }
 
             // Initialize copy buttons on page load
             initializeCopyButtons();
+
+            // Initialize menu listeners on page load
+            initializeMenuListeners();
         });
     </script>
 </x-app-layout>
