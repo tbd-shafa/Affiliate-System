@@ -25,8 +25,6 @@
                         </button>
                     </div>
                     <p>Share your affiliate link for earnings.</p>
-                @else
-                    <p>Your affiliate request is not approved yet.</p>
                 @endif
             @endif
         </div>

@@ -1,6 +1,6 @@
 <x-app-layout>
 
- <div class="py-12">
+    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg grid grid-cols-12 gap-4">
                 <!-- Left Menu -->
@@ -35,39 +35,56 @@
             </div>
         </div>
     </div>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const contentArea = document.getElementById('affiliate-content');
-
-    document.querySelectorAll('.load-content').forEach(link => {
-        link.addEventListener('click', event => {
-            event.preventDefault();
-
-            const url = link.getAttribute('data-url');
-
-            // Fetch content via AJAX
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest', // Inform Laravel it's an AJAX request
-                },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch content');
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    // Replace content in the content area
-                    contentArea.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Error loading content:', error);
-                    contentArea.innerHTML = '<p>Error loading content.</p>';
+    <script>
+        function initializeCopyButtons() {
+            document.querySelectorAll('.copy-link-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const link = button.getAttribute('data-link');
+                    navigator.clipboard.writeText(link).then(() => {
+                        alert('Affiliate link copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy affiliate link: ', err);
+                    });
                 });
-        });
-    });
-});
+            });
+        }
 
-</script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentArea = document.getElementById('affiliate-content');
+
+            document.querySelectorAll('.load-content').forEach(link => {
+                link.addEventListener('click', event => {
+                    event.preventDefault();
+
+                    const url = link.getAttribute('data-url');
+
+                    // Fetch content via AJAX
+                    fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch content');
+                            }
+                            return response.text();
+                        })
+                        .then(html => {
+                            contentArea.innerHTML = html;
+
+                            // Reinitialize copy buttons after new content loads
+                            initializeCopyButtons();
+                        })
+                        .catch(error => {
+                            console.error('Error loading content:', error);
+                            contentArea.innerHTML = '<p>Error loading content.</p>';
+                        });
+                });
+            });
+
+            // Initialize copy buttons on page load
+            initializeCopyButtons();
+        });
+    </script>
 </x-app-layout>
