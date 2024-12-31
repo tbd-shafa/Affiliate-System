@@ -2,8 +2,9 @@
 
 
     <div class="py-12">
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="mb-2">
                 @if (session('success'))
                     <div x-data="{ open: true }" x-show="open" x-transition
                         class="alert alert-success mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4">
@@ -22,6 +23,9 @@
                         </div>
                     </div>
                 @endif
+            </div>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+
 
 
                 <div class="overflow-x-auto">

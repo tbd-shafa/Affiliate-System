@@ -92,11 +92,19 @@ class AffiliateController extends Controller
             // Retrieve the affiliate request from the user_details table
             $affiliateUser = UserDetail::findOrFail($id);
 
+            // Generate a unique affiliate code
+            $affiliateCode = strtoupper(Str::random(10));
+            // Ensure the affiliate code is unique
+            while (UserDetail::where('affiliate_code', $affiliateCode)->exists()) {
+               
+                $affiliateCode = strtoupper(Str::random(10));
+            }
+
             // Update the status and set a unique affiliate code
             $affiliateUser->update([
                 'percentage_value' =>$request->percentage,
                 'status' => 'approved',
-                'affiliate_code' => strtoupper(Str::random(10)), // Generate a unique code
+                'affiliate_code' => $affiliateCode, // Save the unique code
             ]);
 
             // Get the email address of the user associated with the affiliate
