@@ -84,8 +84,9 @@
                         <x-nav-link href="{{ route('affiliate.create') }}" :active="request()->routeIs('affiliate.create')">
                             {{ __('Become Affiliate') }}
                         </x-nav-link>
-                    @else
-                        <!-- Disabled Become an Affiliate button for 'pending', 'approved', or 'Deleted' statuses -->
+                    @endif
+                    @if (!Auth::user()->affiliateUser || in_array(Auth::user()->affiliateUser->status, ['pending']))
+                        <!-- Disabled Become an Affiliate button for pending -->
                         <x-nav-link class="text-gray-500 cursor-not-allowed pointer-events-none text-disabled"
                             :active="request()->routeIs('affiliate.create')">
                             {{ __('Become Affiliate') }}

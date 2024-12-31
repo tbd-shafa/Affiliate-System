@@ -38,13 +38,6 @@
                     @elseif (in_array('affiliate_user', $roles))
                         <h3>Welcome to Affiliate Panel</h3>
                         @if ($userDetails && $userDetails->status === 'approved')
-                            @php
-                                // Generate the affiliate link
-                                $affiliateLink = url('/register') . '?referrer=' . $userDetails->affiliate_code;
-                            @endphp
-
-                            <p>Your affiliate link: <a href="{{ $affiliateLink }}" target="_blank">{{ $affiliateLink }}</a></p>
-                            <p>Share your affiliate link for earnings.</p>
                         @else
                             <p>Your affiliate request is not approved yet.</p>
                         @endif
