@@ -36,38 +36,18 @@
         </div>
     </div>
     <script>
-       
         function initializeCopyButtons() {
-    document.querySelectorAll('.copy-link-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const link = button.getAttribute('data-link');
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(link)
-                    .then(() => {
+            document.querySelectorAll('.copy-link-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const link = button.getAttribute('data-link');
+                    navigator.clipboard.writeText(link).then(() => {
                         alert('Affiliate link copied to clipboard!');
-                    })
-                    .catch(err => {
+                    }).catch(err => {
                         console.error('Failed to copy affiliate link: ', err);
                     });
-            } else {
-                // Fallback for insecure contexts or older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = link;
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    alert('Affiliate link copied to clipboard!');
-                } catch (err) {
-                    console.error('Fallback: Unable to copy', err);
-                }
-                document.body.removeChild(textArea);
-            }
-        });
-    });
-}
-
+                });
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const contentArea = document.getElementById('affiliate-content');
