@@ -15,9 +15,12 @@ class UserController extends Controller
     // Dynamic index for any role
     public function index($role)
     {
+
         $users = User::whereHas('roles', function ($query) use ($role) {
             $query->where('name', $role);
-        })->paginate(10);
+        })
+        ->orderBy('created_at', 'desc') // Order by creation date, latest first
+        ->paginate(10);
 
         return view('users.index', compact('users', 'role'));
     }
@@ -36,8 +39,9 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'roles' => 'required|array|min:1',
             'password' => 'required|string|min:8|confirmed',
-            'roles' => 'required|array', // Expecting multiple roles as an array
+            
             'address' => 'nullable|string',
             'acc_name' => 'nullable|string',
             'acc_no' => 'nullable|string|max:34',
@@ -85,6 +89,12 @@ class UserController extends Controller
         ];
 
         if (in_array('affiliate_user', $validatedData['roles'])) {
+            $affiliateCode = strtoupper(Str::random(10));
+            // Ensure the affiliate code is unique
+            while (UserDetail::where('affiliate_code', $affiliateCode)->exists()) {
+               
+                $affiliateCode = strtoupper(Str::random(10));
+            }
 
             $userDetailsData['address'] = $validatedData['address'] ?? null;
             $userDetailsData['acc_name'] = $validatedData['acc_name'] ?? null;
@@ -94,7 +104,7 @@ class UserController extends Controller
             $userDetailsData['phone_number'] = $validatedData['phone_number'] ?? null;
             $userDetailsData['percentage_value'] = $validatedData['percentage_value'] ?? null;
             $userDetailsData['status'] = 'approved';
-            $userDetailsData['affiliate_code'] = strtoupper(Str::random(10));
+            $userDetailsData['affiliate_code'] = $affiliateCode;
         }
 
         // Step 4: Insert user details
@@ -141,7 +151,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
-            'roles' => 'required|array',
+            'roles' => 'required|array|min:1',
             'address' => 'nullable|string',
             'acc_name' => 'nullable|string',
             'acc_no' => 'nullable|string|max:34',
@@ -184,9 +194,15 @@ class UserController extends Controller
         ];
 
         if ($hasAffiliateRole) {
+            $affiliateCode = strtoupper(Str::random(10));
+            // Ensure the affiliate code is unique
+            while (UserDetail::where('affiliate_code', $affiliateCode)->exists()) {
+               
+                $affiliateCode = strtoupper(Str::random(10));
+            }
             // If 'affiliate_user' role is selected
             $userDetailsData['status'] = 'approved';
-            $userDetailsData['affiliate_code'] = strtoupper(Str::random(10));
+            $userDetailsData['affiliate_code'] = $affiliateCode;
         } else {
             // If 'affiliate_user' role is not selected
             $userDetailsData['status'] = 'just_created';
