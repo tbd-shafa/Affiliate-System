@@ -93,12 +93,6 @@
                             <x-input-error :messages="$errors->get('stripe_id')" class="mt-2" />
                         </div>
 
-
-
-
-
-
-
                         <div class="flex items-center justify-end mt-4 mb-4">
                             <button type="submit"
                                 class="inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">
