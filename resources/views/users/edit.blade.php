@@ -43,7 +43,10 @@
 
                                     <!-- Name -->
                                     <div class="mb-4">
-                                        <x-input-label for="name" :value="__('Name')" />
+                                        <x-input-label for="name" class="inline-flex items-center">
+                                            <span>{{ __('Name') }}</span>
+                                            <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                        </x-input-label>
                                         <x-text-input id="name" class="block mt-1 w-full p-2 border rounded"
                                             type="text" name="name" :value="old('name', $user->name)" required autofocus
                                             autocomplete="name" />
@@ -52,7 +55,10 @@
 
                                     <!-- Email Address -->
                                     <div class="mb-4">
-                                        <x-input-label for="email" :value="__('Email')" />
+                                        <x-input-label for="email" class="inline-flex items-center">
+                                            <span>{{ __('Email') }}</span>
+                                            <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                        </x-input-label>
                                         <x-text-input id="email" class="block mt-1 w-full p-2 border rounded"
                                             type="email" name="email" :value="old('email', $user->email)" required
                                             autocomplete="username" />
@@ -61,7 +67,10 @@
 
                                     <!-- Roles -->
                                     <div class="mb-4">
-                                        <x-input-label :value="__('Assign Roles')" />
+                                        <x-input-label class="inline-flex items-center">
+                                            <span>{{ __('Assign Roles') }}</span>
+                                            <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                        </x-input-label>
                                         <div>
                                             @foreach ($roles as $roleItem)
                                                 <label class="inline-flex items-center">
@@ -72,12 +81,15 @@
                                                 </label>
                                             @endforeach
                                         </div>
-                                         <x-input-error :messages="$errors->get('roles')" class="mt-2" />
+                                        <x-input-error :messages="$errors->get('roles')" class="mt-2" />
                                     </div>
 
                                     <!-- Password -->
                                     <div class="mb-4">
-                                        <x-input-label for="password" :value="__('Password')" />
+                                        <x-input-label for="password" class="inline-flex items-center">
+                                            <span>{{ __('Password') }}</span>
+                                            <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                        </x-input-label>
                                         <x-text-input id="password" class="block mt-1 w-full p-2 border rounded"
                                             type="password" name="password" autocomplete="new-password" />
                                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -85,7 +97,10 @@
 
                                     <!-- Confirm Password -->
                                     <div class="mb-4">
-                                        <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                                        <x-input-label for="password_confirmation" class="inline-flex items-center">
+                                            <span>{{ __('Confirm Password') }}</span>
+                                            <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                        </x-input-label>
                                         <x-text-input id="password_confirmation"
                                             class="block mt-1 w-full p-2 border rounded" type="password"
                                             name="password_confirmation" autocomplete="new-password" />
@@ -97,7 +112,10 @@
 
                                         <!-- Address -->
                                         <div class="mb-4">
-                                            <x-input-label for="address" :value="__('Address')" />
+                                            <x-input-label for="address" class="inline-flex items-center">
+                                                <span>{{ __('Address') }}</span>
+                                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                            </x-input-label>
                                             <x-text-input id="address" class="block mt-1 w-full p-2 border rounded"
                                                 type="text" name="address" :value="old('address', $userDetails->address ?? '')" required />
                                             <x-input-error :messages="$errors->get('address')" class="mt-2" />
@@ -105,7 +123,10 @@
 
                                         <!-- Bank Account Name -->
                                         <div class="mb-4">
-                                            <x-input-label for="acc_name" :value="__('Bank Account Name')" />
+                                            <x-input-label for="acc_name" class="inline-flex items-center">
+                                                <span>{{ __('Bank Account Name') }}</span>
+                                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                            </x-input-label>
                                             <x-text-input id="acc_name" class="block mt-1 w-full p-2 border rounded"
                                                 type="text" name="acc_name" :value="old('acc_name', $userDetails->acc_name ?? '')" required />
                                             <x-input-error :messages="$errors->get('acc_name')" class="mt-2" />
@@ -113,7 +134,10 @@
 
                                         <!-- Bank Account Number -->
                                         <div class="mb-4">
-                                            <x-input-label for="acc_no" :value="__('Bank Account Number')" />
+                                            <x-input-label for="acc_no" class="inline-flex items-center">
+                                                <span>{{ __('Bank Account Number') }}</span>
+                                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                            </x-input-label>
                                             <x-text-input id="acc_no" class="block mt-1 w-full p-2 border rounded"
                                                 type="number" name="acc_no" :value="old('acc_no', $userDetails->acc_no ?? '')" required />
                                             <x-input-error :messages="$errors->get('acc_no')" class="mt-2" />
@@ -121,7 +145,10 @@
 
                                         <!-- Bank Name -->
                                         <div class="mb-4">
-                                            <x-input-label for="bank_name" :value="__('Bank Name')" />
+                                            <x-input-label for="bank_name" class="inline-flex items-center">
+                                                <span>{{ __('Bank Name') }}</span>
+                                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                            </x-input-label>
                                             <x-text-input id="bank_name" class="block mt-1 w-full p-2 border rounded"
                                                 type="text" name="bank_name" :value="old('bank_name', $userDetails->bank_name ?? '')" required />
                                             <x-input-error :messages="$errors->get('bank_name')" class="mt-2" />
@@ -129,7 +156,10 @@
 
                                         <!-- Branch Address -->
                                         <div class="mb-4">
-                                            <x-input-label for="branch_address" :value="__('Branch Address')" />
+                                            <x-input-label for="branch_address" class="inline-flex items-center">
+                                                <span>{{ __('Branch Address') }}</span>
+                                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                            </x-input-label>
                                             <x-text-input id="branch_address"
                                                 class="block mt-1 w-full p-2 border rounded" type="text"
                                                 name="branch_address" :value="old('branch_address', $userDetails->branch_address ?? '')" required />
@@ -138,7 +168,10 @@
 
                                         <!-- Phone Number -->
                                         <div class="mb-4">
-                                            <x-input-label for="phone_number" :value="__('Phone Number')" />
+                                            <x-input-label for="phone_number" class="inline-flex items-center">
+                                                <span>{{ __('Phone Number') }}</span>
+                                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                            </x-input-label>
                                             <x-text-input id="phone_number"
                                                 class="block mt-1 w-full p-2 border rounded" type="number"
                                                 name="phone_number" :value="old('phone_number', $userDetails->phone_number ?? '')" required />
@@ -147,7 +180,10 @@
 
                                         <!-- Commision Percentage Value -->
                                         <div class="mb-4">
-                                            <x-input-label for="percentage_value" :value="__('Commision Percentage Value')" />
+                                            <x-input-label for="percentage_value" class="inline-flex items-center">
+                                                <span>{{ __('ommision Percentage') }}</span>
+                                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                            </x-input-label>
                                             <x-text-input id="percentage_value"
                                                 class="block mt-1 w-full p-2 border rounded" type="number"
                                                 name="percentage_value" :value="old(

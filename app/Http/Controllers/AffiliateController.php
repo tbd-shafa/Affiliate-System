@@ -71,7 +71,7 @@ class AffiliateController extends Controller
     }
     public function showPendingRequests()
     {
-        $pendingRequests = UserDetail::where('status', 'pending')->paginate(10);
+        $pendingRequests = UserDetail::where('status', 'pending')->latest()->paginate(10);
         return view('affiliate.affiliate_requests', compact('pendingRequests'));
     }
 

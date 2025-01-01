@@ -13,8 +13,8 @@
                         @csrf
                         <!-- Name -->
                         <div class="mb-4">
-                            
-                             <x-input-label for="name" class="inline-flex items-center">
+
+                            <x-input-label for="name" class="inline-flex items-center">
                                 <span>{{ __('Name') }}</span>
                                 <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
                             </x-input-label>
@@ -25,7 +25,7 @@
 
                         <!-- Email Address -->
                         <div class="mb-4">
-                           
+
                             <x-input-label for="email" class="inline-flex items-center">
                                 <span>{{ __('Email') }}</span>
                                 <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
@@ -49,8 +49,8 @@
                             </div>
                         </div> --}}
                         <div class="mb-4">
-                          
-                             <x-input-label  class="inline-flex items-center">
+
+                            <x-input-label class="inline-flex items-center">
                                 <span>{{ __('Assign Roles') }}</span>
                                 <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
                             </x-input-label>
@@ -77,8 +77,8 @@
 
                         <!-- Password -->
                         <div class="mb-4">
-                           
-                             <x-input-label for="password" class="inline-flex items-center">
+
+                            <x-input-label for="password" class="inline-flex items-center">
                                 <span>{{ __('Password') }}</span>
                                 <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
                             </x-input-label>
@@ -89,7 +89,7 @@
 
                         <!-- Confirm Password -->
                         <div class="mb-4">
-                            
+
                             <x-input-label for="password_confirmation" class="inline-flex items-center">
                                 <span>{{ __('Confirm Password') }}</span>
                                 <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
@@ -102,11 +102,11 @@
                         <div id="affiliate-fields" style="display: none;">
 
                             <div class="mb-4">
-                              
+
                                 <x-input-label for="address" class="inline-flex items-center">
-                                <span>{{ __('Address') }}</span>
-                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
-                            </x-input-label>
+                                    <span>{{ __('Address') }}</span>
+                                    <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                </x-input-label>
                                 <x-text-input id="address" class="block mt-1 w-full p-2 border rounded" type="text"
                                     name="address" :value="old('address')" required />
 
@@ -116,7 +116,7 @@
 
 
                             <div class="mb-4">
-                               
+
                                 <x-input-label for="acc_name" class="inline-flex items-center">
                                     <span>{{ __('Bank Account Name') }}</span>
                                     <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
@@ -128,7 +128,7 @@
                             </div>
 
                             <div class="mb-4">
-                             
+
                                 <x-input-label for="acc_no" class="inline-flex items-center">
                                     <span>{{ __('Bank Account Number') }}</span>
                                     <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
@@ -140,34 +140,47 @@
 
 
                             <div class="mb-4">
-                                <x-input-label for="bank_name" :value="__('Bank Name')" />
+
+                                <x-input-label for="bank_name" class="inline-flex items-center">
+                                    <span>{{ __('Bank Name') }}</span>
+                                    <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                </x-input-label>
                                 <x-text-input id="bank_name" class="block mt-1 w-full p-2 border rounded" type="text"
                                     name="bank_name" :value="old('bank_name')" required />
                                 <x-input-error :messages="$errors->get('bank_name')" class="mt-2" />
                             </div>
                             <div class="mb-4">
-                                <x-input-label for="branch_address" :value="__('Branch Address')" />
+
+                                <x-input-label for="branch_address" class="inline-flex items-center">
+                                    <span>{{ __('Branch Address') }}</span>
+                                    <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                </x-input-label>
                                 <x-text-input id="branch_address" class="block mt-1 w-full p-2 border rounded"
                                     type="text" name="branch_address" :value="old('branch_address')" required autofocus />
                                 <x-input-error :messages="$errors->get('branch_address')" class="mt-2" />
                             </div>
                             <div class="mb-4">
-                                <x-input-label for="phone_number" :value="__('Phone Number')" />
+
+                                <x-input-label for="phone_number" class="inline-flex items-center">
+                                    <span>{{ __('Phone Number') }}</span>
+                                    <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                </x-input-label>
                                 <x-text-input id="phone_number" class="block mt-1 w-full p-2 border rounded"
                                     type="number" name="phone_number" required />
                                 <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
                             </div>
+
                             <div class="mb-4">
 
-                                <x-input-label for="percentage_value" :value="__('Commision Percentage
-                                                                                                                                                                                                                                                                    Value')" />
-
+                                <x-input-label for="percentage_value" class="inline-flex items-center">
+                                    <span>{{ __('ommision Percentage') }}</span>
+                                    <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                                </x-input-label>
                                 <x-text-input id="percentage_value" class="block mt-1 w-full p-2 border rounded"
                                     type="number" name="percentage_value" :value="10" required />
                                 <x-input-error :messages="$errors->get('percentage_value')" class="mt-2" />
-
-
                             </div>
+
                         </div>
 
                         <script>
