@@ -1,41 +1,33 @@
-
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg grid grid-cols-12 gap-4">
                 <!-- Left Menu -->
                 <div class="col-span-12 md:col-span-3 p-6 text-gray-900">
-                    <a href="{{ route('affiliate.link') }}"
-                        class="block px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded hover:bg-gray-200 load-content"
-                        >
-                        {{ __('Affiliate Link') }}
-                    </a>
-                    <a href="{{ route('affiliate.commission.balance') }}"
-                        class="block px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded hover:bg-gray-200 load-content"
-                        >
-                        {{ __('Current Commission Balance') }}
-                    </a>
-                    <a href="{{ route('affiliate.referred.users') }}"
-                        class="block px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded hover:bg-gray-200 load-content"
-                       >
-                        {{ __('Referred Users') }}
-                    </a>
-                    <a href="{{ route('affiliate.earn.history') }}"
-                        class="block px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded hover:bg-gray-200 load-content"
-                        >
-                        {{ __('Earn History') }}
-                    </a>
+                    <div style="width:70%;">
+                        <x-nav-link href="{{ route('affiliate.link') }}" :active="request()->routeIs('affiliate.link')">
+                            {{ __('Affiliate link') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('affiliate.commission.balance') }}" :active="request()->routeIs('affiliate.commission.balance')">
+                            {{ __('Current Commission') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('affiliate.referred.users') }}" :active="request()->routeIs('affiliate.referred.users')">
+                            {{ __('Referred Users') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('affiliate.earn.history') }}" :active="request()->routeIs('affiliate.earn.history')">
+                            {{ __('Earn History') }}
+                        </x-nav-link>
+                    </div>
+
+
                 </div>
 
                 <!-- Content Section -->
                 <div class="col-span-12 md:col-span-9 bg-white p-6 rounded shadow" id="affiliate-content">
-                
+
                     @yield('content')
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
-
-
-

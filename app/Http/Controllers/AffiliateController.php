@@ -239,7 +239,7 @@ class AffiliateController extends Controller
         })
         ->leftJoin('commissions', 'users.id', '=', 'commissions.user_id') // Join commissions to get earned_amount
         ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'commissions.earn_amount') // Select the columns you need
-        ->paginate(3);
+        ->latest()->paginate(10);
         
         return view('affiliate.referred_users', compact('referredUsers'));
     }
@@ -248,7 +248,7 @@ class AffiliateController extends Controller
     public function earnHistory()
     {
         $userId = auth()->user()->id;
-        $earnHistory = Commission::where('affiliate_user_id', $userId)->orderBy('created_at', 'desc')->paginate(3);
+        $earnHistory = Commission::where('affiliate_user_id', $userId)->latest()->paginate(10);
 
         return view('affiliate.earn_history', compact('earnHistory'));
     }

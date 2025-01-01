@@ -106,7 +106,7 @@
                     @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
                         
 
-                        <x-nav-link href="{{ route('affiliate.panel') }}" :active="request()->routeIs('affiliate.panel')">
+                        <x-nav-link href="{{ route('affiliate.link') }}" :active="request()->routeIs('affiliate.link')">
                         {{ __('Affiliate Panel') }}
                        </x-nav-link>
 

@@ -39,7 +39,7 @@
                         <h3>Welcome to Admin Panel</h3>
                         <p>Manage Users and Other Settings.</p>
                     @elseif (in_array('affiliate_user', $roles))
-                        <h3>Welcome to Affiliate Panel</h3>
+                        <h3>Welcome to User Panel</h3>
                         @if ($userDetails && $userDetails->status === 'approved')
                         @else
                             <p>Your affiliate request is not approved yet.</p>
