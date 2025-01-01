@@ -37,7 +37,7 @@
                         @csrf
 
                         <!-- Subscription Plan Dropdown -->
-                        <div>
+                        {{--  <div>
                             <x-input-label for="plan_id" :value="__('Subscription Plan')" />
                             <select id="plan_id" name="plan_id"
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
@@ -49,58 +49,55 @@
                                 @endforeach
                             </select>
                             <x-input-error :messages="$errors->get('plan_id')" class="mt-2" />
+                        </div> --}}
+                        <div>
+                            <x-input-label for="plan_id" class="inline-flex items-center">
+                                <span>{{ __('Subscription Plan') }}</span>
+                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                            </x-input-label>
+                            <select id="plan_id" name="plan_id"
+                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option value="" disabled {{ old('plan_id') ? '' : 'selected' }}>Select a
+                                    subscription plan</option>
+                                @foreach ($plans as $plan)
+                                    <option value="{{ $plan->id }}"
+                                        {{ old('plan_id') == $plan->id ? 'selected' : '' }}>
+                                        {{ $plan->name }} - ${{ number_format($plan->price, 2) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('plan_id')" class="mt-2" />
                         </div>
 
                         <!-- stripe_price -->
                         <div class="mt-4">
-                            <x-input-label for="stripe_price" :value="__('stripe_price')" />
+                            
+                            <x-input-label for="stripe_price" class="inline-flex items-center">
+                                <span>{{ __('Stripe Price') }}</span>
+                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                            </x-input-label>
                             <x-text-input id="stripe_price" class="block mt-1 w-full" type="text" name="stripe_price"
-                                required />
+                                :value="old('stripe_price')" required />
                             <x-input-error :messages="$errors->get('stripe_price')" class="mt-2" />
                         </div>
 
                         <!-- Package Name -->
                         <div class="mt-4">
-                            <x-input-label for="stripe_id" :value="__('stripe_id')" />
+                           
+                            <x-input-label for="stripe_id" class="inline-flex items-center">
+                                <span>{{ __('Stripe Price Id') }}</span>
+                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+                            </x-input-label>
                             <x-text-input id="stripe_id" class="block mt-1 w-full" type="text" name="stripe_id"
-                                required />
+                                :value="old('stripe_id')" required />
                             <x-input-error :messages="$errors->get('stripe_id')" class="mt-2" />
                         </div>
 
 
-                        <!-- Billing Interval -->
-                        <div class="mt-4">
-                            <x-input-label for="billing_interval" :value="__('Billing Interval')" />
-                            <select id="billing_interval" name="billing_interval"
-                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="month">Monthly</option>
-                                <option value="year">Yearly</option>
-                                <option value="once">One-Time</option>
-                            </select>
-                            <x-input-error :messages="$errors->get('billing_interval')" class="mt-2" />
-                        </div>
 
-                        <!-- Is Popular -->
-                        <div class="mt-4">
-                            <x-input-label for="is_popular" :value="__('Is Popular')" />
-                            <select id="is_popular" name="is_popular"
-                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                            </select>
-                            <x-input-error :messages="$errors->get('is_popular')" class="mt-2" />
-                        </div>
 
-                        <!-- Display Status -->
-                        <div class="mt-4">
-                            <x-input-label for="display_status" :value="__('Display Status')" />
-                            <select id="display_status" name="display_status"
-                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="enable">Enable</option>
-                                <option value="disable">Disable</option>
-                            </select>
-                            <x-input-error :messages="$errors->get('display_status')" class="mt-2" />
-                        </div>
+
+
 
                         <div class="flex items-center justify-end mt-4 mb-4">
                             <button type="submit"

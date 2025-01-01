@@ -17,7 +17,7 @@ class SubscriptionController extends Controller
     public function index()
     {
         // Fetch available subscription plans (assume a model SubscriptionPlan exists)
-        $plans = \App\Models\SubscriptionPlan::where('status', 'active')->get();
+        $plans = \App\Models\SubscriptionPlan::where('status', 'active')->latest()->get();
 
         return view('subscriptions.index', compact('plans'));
     }
