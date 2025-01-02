@@ -38,22 +38,19 @@
                     @if (in_array('admin', $roles))
                         <h3>Welcome to Admin Panel</h3>
                         <p>Manage Users and Other Settings.</p>
-                    @elseif (in_array('affiliate_user', $roles))
-                       
-                        
-                    @elseif (in_array('user', $roles))
-                     <h3>Welcome to User Panel</h3>
-                        @if ($userDetails && $userDetails->status === 'pending')
-                            
-                            <p>Your Affiliate Request is Pending(under review). Please check back later.</p> 
-                        @endif
-                    @else
-                        <h3>Welcome</h3>
-                        <p>Your role is not recognized.</p>
                     @endif
-                </div>
+                    @if (in_array('affiliate_user', $roles))
+                    @endif
 
+                    @if (in_array('user', $roles))
+                        <h3>Welcome to User Panel</h3>
+                        @if ($userDetails && $userDetails->status === 'pending')
+                            <p>Your Affiliate Request is Pending(under review). Please check back later.</p>
+                        @endif
+                    @endif
+
+
+                </div>
             </div>
         </div>
-    </div>
 </x-app-layout>
