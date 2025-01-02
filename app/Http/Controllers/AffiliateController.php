@@ -22,6 +22,7 @@ use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\DB;
 
 
+
 class AffiliateController extends Controller
 {
     public function create()
@@ -40,7 +41,7 @@ class AffiliateController extends Controller
         }
         return view('affiliate.affiliate-link');
     }
-    
+
     public function store(Request $request)
     {
 
@@ -52,14 +53,15 @@ class AffiliateController extends Controller
             'phone_number' => [
                 'required',
                 'string',
-                'regex:/^\+?[1-9]\d{1,14}$/', // Phone number validation regex
-                'max:15', // E.164 format (max length 15)
+                'regex:/^(\+?[1-9]\d{1,14}|0\d{10})$/',
+                'min:11',
+                'max:14', // E.164 format (max length 15)
             ],
             'bank_name' => 'required|string|max:255',
             'branch_address' => 'required|string|max:255',
         ]);
 
-        dd(1);
+
         // Fetch the authenticated user
         $user = auth()->user();
 
@@ -104,13 +106,13 @@ class AffiliateController extends Controller
             $affiliateCode = strtoupper(Str::random(10));
             // Ensure the affiliate code is unique
             while (UserDetail::where('affiliate_code', $affiliateCode)->exists()) {
-               
+
                 $affiliateCode = strtoupper(Str::random(10));
             }
 
             // Update the status and set a unique affiliate code
             $affiliateUser->update([
-                'percentage_value' =>$request->percentage,
+                'percentage_value' => $request->percentage,
                 'status' => 'approved',
                 'affiliate_code' => $affiliateCode, // Save the unique code
             ]);
@@ -126,19 +128,19 @@ class AffiliateController extends Controller
 
             if ($affiliateRoleId) {
                 // insert new row in the 'role_user' table
-                    DB::table('role_user')->insert([
-                        'user_id' => $user->id,  // Link to the user created
-                        'role_id' => $affiliateRoleId, // Role ID (admin role)
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                DB::table('role_user')->insert([
+                    'user_id' => $user->id,  // Link to the user created
+                    'role_id' => $affiliateRoleId, // Role ID (admin role)
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
 
             // $affiliateRoleId = Role::where('name', 'affiliate_user')->value('id');
             // if ($affiliateRoleId) {
             //     // Get the user's current roles
             //     $currentRoles = $user->roles;
-    
+
             //     // Check if the user has the 'user' role and update it
             //     foreach ($currentRoles as $role) {
             //         if ($role->name === 'user') {
@@ -147,7 +149,7 @@ class AffiliateController extends Controller
             //                 ->where('user_id', $user->id)
             //                 ->where('role_id', $role->id)
             //                 ->update(['role_id' => $affiliateRoleId, 'updated_at' => now()]);
-                        
+
             //             // No need to insert a new row, just update the existing one
             //             break;
             //         }
@@ -168,7 +170,7 @@ class AffiliateController extends Controller
 
     public function rejectRequest($id)
     {
-        
+
 
         $affiliateUser = UserDetail::findOrFail($id);
 
@@ -226,7 +228,7 @@ class AffiliateController extends Controller
     {
         $userId = auth()->user()->id;
         $totalCommission = Commission::where('affiliate_user_id', $userId)->sum('earn_amount');
-       
+
         return view('affiliate.commission_balance', compact('totalCommission'));
     }
 
@@ -235,12 +237,8 @@ class AffiliateController extends Controller
     {
         $userId = auth()->user()->id;
 
-        // $referredUsers = User::whereIn('id', function ($query) use ($userId) {
-        //     $query->select('user_id')
-        //         ->from('affiliate_referrals')
-        //         ->where('referrer_id', $userId); // Match the referrer_id
-        // })->paginate(10);
-        
+
+       
         $referredUsers = User::whereIn('users.id', function ($query) use ($userId) {
             $query->select('user_id')
                 ->from('affiliate_referrals')
@@ -249,7 +247,9 @@ class AffiliateController extends Controller
         ->leftJoin('commissions', 'users.id', '=', 'commissions.user_id') // Join commissions to get earned_amount
         ->select('users.id', 'users.name', 'users.email', 'users.created_at', 'commissions.earn_amount') // Select the columns you need
         ->latest()->paginate(10);
-        
+
+       
+
         return view('affiliate.referred_users', compact('referredUsers'));
     }
 
@@ -257,7 +257,9 @@ class AffiliateController extends Controller
     public function earnHistory()
     {
         $userId = auth()->user()->id;
+        
         $earnHistory = Commission::where('affiliate_user_id', $userId)->latest()->paginate(10);
+    
 
         return view('affiliate.earn_history', compact('earnHistory'));
     }

@@ -134,7 +134,7 @@
                                     <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
                                 </x-input-label>
                                 <x-text-input id="acc_no" class="block mt-1 w-full p-2 border rounded" type="number"
-                                    name="acc_no" required />
+                                    name="acc_no" :value="old('acc_no')" required />
                                 <x-input-error :messages="$errors->get('acc_no')" class="mt-2" />
                             </div>
 

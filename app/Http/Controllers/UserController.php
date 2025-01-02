@@ -47,7 +47,14 @@ class UserController extends Controller
             'acc_no' => 'nullable|string|max:34',
             'bank_name' => 'nullable|string',
             'branch_address' => 'nullable|string',
-            'phone_number' => 'nullable|string',
+            //'phone_number' => 'nullable|string',
+            'phone_number' => [
+                'required',
+                'string',
+                'regex:/^(\+?[1-9]\d{1,14}|0\d{10})$/',
+                'min:11',
+                'max:14', // E.164 format (max length 15)
+            ],
             'percentage_value' => 'nullable|numeric|min:0|max:100',
         ]);
 
@@ -141,6 +148,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        
         $user = User::find($id);
         if (!$user) {
             abort(404, 'User not found');
@@ -157,10 +165,17 @@ class UserController extends Controller
             'acc_no' => 'nullable|string|max:34',
             'bank_name' => 'nullable|string',
             'branch_address' => 'nullable|string',
-            'phone_number' => 'nullable|string',
+            //'phone_number' => 'nullable|string',
+            'phone_number' => [
+                'nullable',
+                'string',
+                'regex:/^(\+?[1-9]\d{1,14}|0\d{10})$/',
+                'min:11',
+                'max:14', // E.164 format (max length 15)
+            ],
             'percentage_value' => 'nullable|numeric|min:0|max:100',
         ]);
-
+      
         // Update user
         $user->update([
             'name' => $validatedData['name'],
