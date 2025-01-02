@@ -26,29 +26,37 @@
                                 class="copy-link-btn px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400">
                                 Copy Link
                             </button>
-                            <script>
-                                document.getElementById('copy-link-btn').addEventListener('click', function() {
-                                    // Select the affiliate link text
-                                    const link = document.getElementById('affiliate-link').textContent;
-
-                                    // Create a temporary input element to copy the text
-                                    const input = document.createElement('input');
-                                    input.value = link;
-                                    document.body.appendChild(input);
-
-                                    // Select and copy the text
-                                    input.select();
-                                    document.execCommand('copy');
-
-                                    // Remove the input element
-                                    document.body.removeChild(input);
-
-                                    // Provide feedback to the user
-                                    alert('Affiliate link copied to clipboard!');
-                                });
-                            </script>
                         </div>
                         <p>Share your affiliate link for earnings.</p>
+
+                        <script>
+                            document.getElementById('copy-link-btn').addEventListener('click', function(event) {
+                                // Select the affiliate link text
+                                const link = document.getElementById('affiliate-link').textContent;
+
+                                // Create a temporary input element to copy the text
+                                const input = document.createElement('input');
+                                input.value = link;
+                                document.body.appendChild(input);
+
+                                // Select and copy the text
+                                input.select();
+                                document.execCommand('copy');
+
+                                // Remove the input element
+                                document.body.removeChild(input);
+
+                                // Change button text to "Link Copied!"
+                                const button = event.target;
+                                const originalText = button.textContent;
+                                button.textContent = 'Link Copied!';
+
+                                // Revert back to original text after 2 seconds
+                                setTimeout(() => {
+                                    button.textContent = originalText;
+                                }, 2000);
+                            });
+                        </script>
                     @endif
                 @endif
             </div>
