@@ -15,4 +15,15 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class, 'role_user', 'role_id', 'user_id');
     }
+
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
 }

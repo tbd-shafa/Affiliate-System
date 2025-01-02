@@ -114,37 +114,37 @@ class AffiliateController extends Controller
             $user = $affiliateUser->user;
 
             // Find the 'affiliate_user' role ID
-            //$affiliateRoleId = Role::where('name', 'affiliate_user')->value('id');
-
-            // if ($affiliateRoleId) {
-            //     // Update the role in the 'role_user' table
-            //         DB::table('role_user')->insert([
-            //             'user_id' => $user->id,  // Link to the user created
-            //             'role_id' => $affiliateRoleId, // Role ID (admin role)
-            //             'created_at' => now(),
-            //             'updated_at' => now(),
-            //         ]);
-            // }
-
             $affiliateRoleId = Role::where('name', 'affiliate_user')->value('id');
+
             if ($affiliateRoleId) {
-                // Get the user's current roles
-                $currentRoles = $user->roles;
-    
-                // Check if the user has the 'user' role and update it
-                foreach ($currentRoles as $role) {
-                    if ($role->name === 'user') {
-                        // Update the role_id in 'role_user' table
-                        DB::table('role_user')
-                            ->where('user_id', $user->id)
-                            ->where('role_id', $role->id)
-                            ->update(['role_id' => $affiliateRoleId, 'updated_at' => now()]);
-                        
-                        // No need to insert a new row, just update the existing one
-                        break;
-                    }
-                }
+                // insert new row in the 'role_user' table
+                    DB::table('role_user')->insert([
+                        'user_id' => $user->id,  // Link to the user created
+                        'role_id' => $affiliateRoleId, // Role ID (admin role)
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
             }
+
+            // $affiliateRoleId = Role::where('name', 'affiliate_user')->value('id');
+            // if ($affiliateRoleId) {
+            //     // Get the user's current roles
+            //     $currentRoles = $user->roles;
+    
+            //     // Check if the user has the 'user' role and update it
+            //     foreach ($currentRoles as $role) {
+            //         if ($role->name === 'user') {
+            //             // Update the role_id in 'role_user' table
+            //             DB::table('role_user')
+            //                 ->where('user_id', $user->id)
+            //                 ->where('role_id', $role->id)
+            //                 ->update(['role_id' => $affiliateRoleId, 'updated_at' => now()]);
+                        
+            //             // No need to insert a new row, just update the existing one
+            //             break;
+            //         }
+            //     }
+            // }
 
             // Send approval email
             $this->sendApprovalEmail($user->email, true);

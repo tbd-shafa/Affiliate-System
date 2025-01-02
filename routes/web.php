@@ -21,33 +21,42 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // manage affiliate
-    Route::get('/become-affiliate', [AffiliateController::class, 'create'])->name('affiliate.create');
-    Route::post('/become-affiliate', [AffiliateController::class, 'store'])->name('affiliate.store');
-    Route::get('/admin/affiliate-requests', [AffiliateController::class, 'showPendingRequests'])->name('affiliate.requests');
-    Route::post('/admin/affiliate-requests/{id}/approve', [AffiliateController::class, 'approveRequest'])->name('affiliate.approve');
-    Route::post('/admin/affiliate-requests/{id}/reject', [AffiliateController::class, 'rejectRequest'])->name('affiliate.reject');
 
-    Route::get('/affiliate/commission-balance', [AffiliateController::class, 'commissionBalance'])->name('affiliate.commission.balance');
-    Route::get('/affiliate/referred-users', [AffiliateController::class, 'referredUsers'])->name('affiliate.referred.users');
-    Route::get('/affiliate/earn-history', [AffiliateController::class, 'earnHistory'])->name('affiliate.earn.history');
-    Route::get('/affiliate/panel', [AffiliateController::class, 'panel'])->name('affiliate.panel');
-    Route::get('/affiliate/link', [AffiliateController::class, 'link'])->name('affiliate.link');
+    // Manage Affiliate - Only for affiliate_user
+    Route::middleware('check.role:affiliate_user')->group(function () {
+        Route::get('/affiliate/commission-balance', [AffiliateController::class, 'commissionBalance'])->name('affiliate.commission.balance');
+        Route::get('/affiliate/referred-users', [AffiliateController::class, 'referredUsers'])->name('affiliate.referred.users');
+        Route::get('/affiliate/earn-history', [AffiliateController::class, 'earnHistory'])->name('affiliate.earn.history');
+        Route::get('/affiliate/panel', [AffiliateController::class, 'panel'])->name('affiliate.panel');
+        Route::get('/affiliate/link', [AffiliateController::class, 'link'])->name('affiliate.link');
+    });
 
+    // Manage Affiliate - Only for admin
+    Route::middleware('check.role:admin')->group(function () {
+        Route::get('/admin/affiliate-requests', [AffiliateController::class, 'showPendingRequests'])->name('affiliate.requests');
+        Route::post('/admin/affiliate-requests/{id}/approve', [AffiliateController::class, 'approveRequest'])->name('affiliate.approve');
+        Route::post('/admin/affiliate-requests/{id}/reject', [AffiliateController::class, 'rejectRequest'])->name('affiliate.reject');
+    });
 
-    // Manage subscription
-    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::post('/subscriptions/buy', [SubscriptionController::class, 'buySubscription'])->name('subscriptions.buy');
+    // Manage subscription and create affiliate
+
+    Route::middleware('check.role:user,affiliate_user')->group(function () {
+        Route::get('/become-affiliate', [AffiliateController::class, 'create'])->name('affiliate.create');
+        Route::post('/become-affiliate', [AffiliateController::class, 'store'])->name('affiliate.store');
+        Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::post('/subscriptions/buy', [SubscriptionController::class, 'buySubscription'])->name('subscriptions.buy');
+    });
 
     //manage commision percentage
-    Route::get('/commission-percentage', [SubscriptionController::class, 'viewCommisionPercentage'])->name('commission.percentage');
-    Route::get('/commission-percentage/{id}/edit', [SubscriptionController::class, 'editCommisionPercentage'])->name('commission.edit');
-    Route::put('/commission-percentage/{id}/update', [SubscriptionController::class, 'updateCommisionPercentage'])->name('commission.update');
+    Route::middleware('check.role:admin')->group(function () {
+        Route::get('/commission-percentage', [SubscriptionController::class, 'viewCommisionPercentage'])->name('commission.percentage');
+        Route::get('/commission-percentage/{id}/edit', [SubscriptionController::class, 'editCommisionPercentage'])->name('commission.edit');
+        Route::put('/commission-percentage/{id}/update', [SubscriptionController::class, 'updateCommisionPercentage'])->name('commission.update');
+    });
 
 
-
-    // User Management Routes
-    Route::prefix('users')->name('users.')->group(function () {
+    // User Management - Only for admin
+    Route::prefix('users')->name('users.')->middleware('check.role:admin')->group(function () {
         Route::get('/{role}', [UserController::class, 'index'])->name('index'); // Dynamic route for all users based on role
         Route::get('/{role}/create', [UserController::class, 'create'])->name('create');
         Route::post('/{role}', [UserController::class, 'store'])->name('store');

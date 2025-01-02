@@ -27,7 +27,7 @@ class ReferralCookieMiddleware
 
     public function handle(Request $request, Closure $next, $expirationTime = 10080) // Default to 1440 minutes (24 hours)
     {
-      
+     
         // Check if the request has a referrer query parameter
         $referrerCode = $request->query('referrer') ?: '';
 
