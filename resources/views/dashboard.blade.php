@@ -39,17 +39,13 @@
                         <h3>Welcome to Admin Panel</h3>
                         <p>Manage Users and Other Settings.</p>
                     @elseif (in_array('affiliate_user', $roles))
-                        <h3>Welcome to User Panel</h3>
-                        @if ($userDetails && $userDetails->status === 'approved')
-                        @else
-                            <p>Your affiliate request is not approved yet.</p>
-                        @endif
+                       
+                        
                     @elseif (in_array('user', $roles))
+                     <h3>Welcome to User Panel</h3>
                         @if ($userDetails && $userDetails->status === 'pending')
-                            <h3>Affiliate Request Pending</h3>
-                            <p>Your affiliate request is currently under review. Please check back later.</p>
-                        @else
-                            <h3>Welcome to User Panel</h3>
+                            
+                            <p>Your Affiliate Request is Pending(under review). Please check back later.</p> 
                         @endif
                     @else
                         <h3>Welcome</h3>

@@ -100,14 +100,47 @@
                                         </button>
 
 
-                                        <form method="POST" action="{{ route('affiliate.reject', $request->id) }}"
+                                        {{--  <form method="POST" action="{{ route('affiliate.reject', $request->id) }}"
                                             style="display: inline-block;">
                                             @csrf
                                             <button type="submit" class=text-red-600 hover:text-red-900 ml-4"
                                                 onclick="return confirm('Are you sure you want to reject this Request?')">
                                                 Reject
                                             </button>
+                                        </form>  --}}
+
+                                        <form method="POST" action="{{ route('affiliate.reject', $request->id) }}"
+                                            style="display: inline-block;">
+                                            @csrf
+                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-4"
+                                                id="rejectButton{{ $request->id }}"
+                                                onclick="return disableButtonAndSubmit(event, '{{ $request->id }}')">
+                                                Reject
+                                            </button>
                                         </form>
+
+                                        <script>
+                                            function disableButtonAndSubmit(event, requestId) {
+                                                // Prevent the default button action if necessary
+                                                event.preventDefault();
+
+                                                // Get the reject button by ID
+                                                const button = document.getElementById(`rejectButton${requestId}`);
+
+                                                // Disable the button to prevent multiple clicks
+                                                button.disabled = true;
+
+                                                // Change the button text to indicate processing
+                                                button.innerText = 'Processing...';
+
+                                                // Submit the form
+                                                button.closest('form').submit();
+
+                                                // Return false to prevent any further action (optional for redundancy)
+                                                return false;
+                                            }
+                                        </script>
+
 
                                     </td>
                                 </tr>
@@ -172,11 +205,19 @@
 
 
                                     <!-- Approve Button -->
-                                    <button type="submit"
+                                    {{-- <button type="submit"
                                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                                         onclick="document.getElementById('action_type{{ $request->id }}').value = 'approve';">
                                         Approve
+                                    </button> --}}
+
+                                    <button type="submit"
+                                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                                        id="approveButton{{ $request->id }}"
+                                        onclick="handleApprove('{{ $request->id }}')">
+                                        Approve
                                     </button>
+
                                 </div>
                             </form>
                         </div>
@@ -184,6 +225,22 @@
                 @endforeach
 
                 <script>
+                    function handleApprove(requestId) {
+                        // Get the approve button
+                        const approveButton = document.getElementById(`approveButton${requestId}`);
+                        const actionTypeInput = document.getElementById(`action_type${requestId}`);
+
+                        // Set the action type
+                        actionTypeInput.value = 'approve';
+
+                        // Disable the button and indicate it's processing
+                        approveButton.disabled = true;
+                        approveButton.innerText = 'Processing...';
+
+                        // Allow the form to submit
+                        approveButton.closest('form').submit();
+                    }
+
                     document.querySelectorAll('[data-modal-target]').forEach(button => {
                         button.addEventListener('click', () => {
                             const modalId = button.getAttribute('data-modal-target');

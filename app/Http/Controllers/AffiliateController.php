@@ -160,6 +160,7 @@ class AffiliateController extends Controller
 
     public function rejectRequest($id)
     {
+        
 
         $affiliateUser = UserDetail::findOrFail($id);
 
