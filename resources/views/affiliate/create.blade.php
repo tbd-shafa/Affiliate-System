@@ -19,6 +19,7 @@
                                 <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
                             </x-input-label>
                             <textarea id="address" name="address" class="block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('address') }}</textarea>
+                             <x-input-error :messages="$errors->get('address')" class="mt-2" />
                         </div>
 
                         <div class="mb-4">
@@ -31,6 +32,7 @@
                             <input id="acc_name" name="acc_name" type="text"
                                 class="block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('acc_name') }}"
                                 required />
+                                 <x-input-error :messages="$errors->get('acc_name')" class="mt-2" />
                         </div>
 
                         <div class="mb-4">
@@ -43,6 +45,7 @@
                             <input id="acc_no" name="acc_no" type="text"
                                 class="block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('acc_no') }}"
                                 required />
+                                <x-input-error :messages="$errors->get('acc_no')" class="mt-2" />
                         </div>
 
                         <div class="mb-4">
@@ -54,6 +57,7 @@
                             <input id="bank_name" name="bank_name" type="text"
                                 class="block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('bank_name') }}"
                                 required />
+                                 <x-input-error :messages="$errors->get('bank_name')" class="mt-2" />
                         </div>
                         <div class="mb-4">
 
@@ -63,7 +67,8 @@
                             </x-input-label>
                             <x-text-input id="phone_number" class="block mt-1 w-full p-2 border rounded" type="number"
                                 name="phone_number" required />
-                            <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
+                           
+                             <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
                         </div>
                         <div class="mb-4">
 
@@ -76,6 +81,7 @@
                             <input id="branch_address" name="branch_address" type="text"
                                 class="block w-full rounded-md border-gray-300 shadow-sm"
                                 value="{{ old('branch_address') }}" required />
+                                <x-input-error :messages="$errors->get('branch_address')" class="mt-2" />
                         </div>
 
                         <div class="flex items-center justify-end mt-4 mb-4">

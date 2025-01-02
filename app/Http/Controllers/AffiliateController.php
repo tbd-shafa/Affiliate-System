@@ -47,11 +47,19 @@ class AffiliateController extends Controller
         $request->validate([
             'address' => 'required|string|max:255',
             'acc_name' => 'required|string|max:255',
-            'acc_no' => 'required|string|max:20',
-            'phone_number' => 'required|string|max:255',
+            'acc_no' => 'required|string|max:25',
+            //'phone_number' => 'required|string|max:15',
+            'phone_number' => [
+                'required',
+                'string',
+                'regex:/^\+?[1-9]\d{1,14}$/', // Phone number validation regex
+                'max:15', // E.164 format (max length 15)
+            ],
             'bank_name' => 'required|string|max:255',
             'branch_address' => 'required|string|max:255',
         ]);
+
+        dd(1);
         // Fetch the authenticated user
         $user = auth()->user();
 
