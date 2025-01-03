@@ -236,8 +236,6 @@ class AffiliateController extends Controller
     public function referredUsers()
     {
         $userId = auth()->user()->id;
-
-
        
         $referredUsers = User::whereIn('users.id', function ($query) use ($userId) {
             $query->select('user_id')

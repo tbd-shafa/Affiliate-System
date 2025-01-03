@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-   
+
     use HasFactory, Notifiable, SoftDeletes;
 
     /**
@@ -55,24 +55,32 @@ class User extends Authenticatable
     //     return $this->hasOne(AffiliateUser::class);
     // }
 
-    
+
 
     public function referrals()
     {
         return $this->hasMany(AffiliateReferral::class, 'referrer_id');
     }
-
+    // public function commissions()
+    // {
+    //     return $this->hasMany(Commission::class, 'affiliate_user_id', 'id');
+    // }
 
     public function affiliateReferrals()
     {
         return $this->hasMany(AffiliateReferral::class, 'referrer_id');
     }
-    public function commissions()
-    {
-        return $this->hasMany(Commission::class, 'user_id', 'id');
-    }
+
 
     //after new setup
+    public function commissions()
+    {
+        return $this->hasMany(Commission::class, 'affiliate_user_id', 'id');
+    }
+
+    
+
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
@@ -90,9 +98,7 @@ class User extends Authenticatable
         return $this->hasOne(UserDetail::class, 'user_id');
     }
     public function userDetail()
-{
-    return $this->hasOne(UserDetail::class, 'user_id');
-}
-
-   
+    {
+        return $this->hasOne(UserDetail::class, 'user_id');
+    }
 }

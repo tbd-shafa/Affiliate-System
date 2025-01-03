@@ -64,6 +64,13 @@
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Email</th>
+
+                                @if($role == 'affiliate_user')
+                                 <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Total Commisions Earned</th>
+                                @endif
+
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions</th>
@@ -78,6 +85,10 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->email }}
                                     </td>
+                                    @if($role == 'affiliate_user')
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">  ${{ number_format($user->commissions()->sum('earn_amount'), 2) }}
+                                    </td>
+                                    @endif
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
 
 
