@@ -261,4 +261,5 @@ class AffiliateController extends Controller
 
         return view('affiliate.earn_history', compact('earnHistory'));
     }
+    
 }

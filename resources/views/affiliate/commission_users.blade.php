@@ -74,11 +74,20 @@
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${{ number_format($user->commissions()->sum('earn_amount'), 2) }}
+                                        <a href="{{ route('admin.affiliate.earn.history', ['user' => $user->id]) }}"
+                                            class="text-blue-500 hover:underline">
+                                            ${{ number_format($user->commissions()->sum('earn_amount'), 2) }}
+                                        </a>
+
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${{ number_format($user->payouts()->sum('amount'), 2) }}
+                                        <a href="{{ route('admin.affiliate.payout.history', ['user' => $user->id]) }}"
+                                            class="text-blue-500 hover:underline">
+                                            ${{ number_format($user->payouts()->sum('amount'), 2) }}
+                                        </a>
+
+
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -91,6 +100,122 @@
                                             data-modal-target="#approveModal{{ $user->id }}">
                                             Make Payout
                                         </button>
+                                        <div id="approveModal{{ $user->id }}"
+                                            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center 
+                       @if ($errors->any() && old('user_id') == $user->id) @else hidden @endif">
+                                            <div class="bg-white w-1/3 rounded-lg shadow-lg">
+                                                <form method="POST"
+                                                    action="{{ route('commission.payout', $user->id) }}">
+                                                    @csrf
+                                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                    <div class="p-4 border-b flex justify-between items-center">
+                                                        <h5 class="text-lg font-semibold">Current Balance:
+                                                            ${{ number_format($user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount'), 2) }}
+                                                        </h5>
+                                                        <!-- Close Button -->
+                                                        <button type="button" class="text-gray-500 hover:text-gray-700"
+                                                            onclick="closeModal('{{ $user->id }}')">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                                fill="none" viewBox="0 0 24 24"
+                                                                stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <div class="p-4">
+                                                        @if (session('error') && old('user_id') == $user->id)
+                                                            <div
+                                                                class="alert alert-danger text-red-600 p-2 mb-4 border border-red-300 rounded">
+                                                                {{ session('error') }}
+                                                            </div>
+                                                        @endif
+
+                                                        <div class="mb-3">
+                                                            <label for="amount{{ $user->id }}"
+                                                                class="block text-sm font-medium text-gray-700 mb-2">
+                                                                Payout Amount<span style="color:red;">*</span>
+                                                            </label>
+                                                            <input type="number" name="amount"
+                                                                id="amount{{ $user->id }}"
+                                                                class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('amount') border-red-500 @enderror"
+                                                                min="0"
+                                                                max="{{ number_format($user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount'), 2) }}"
+                                                                value="{{ old('amount') }}" required>
+                                                            @error('amount')
+                                                                <span
+                                                                    class="text-red-600 text-sm">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="remarks{{ $user->id }}"
+                                                                class="block text-sm font-medium text-gray-700 mb-2">
+                                                                Remarks<span style="color:red;">*</span>
+                                                            </label>
+                                                            <input type="text" name="remarks"
+                                                                id="remarks{{ $user->id }}"
+                                                                class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('remarks') border-red-500 @enderror"
+                                                                value="{{ old('remarks') }}" required>
+                                                            @error('remarks')
+                                                                <span
+                                                                    class="text-red-600 text-sm">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="payment_by{{ $user->id }}"
+                                                                class="block text-sm font-medium text-gray-700 mb-2">
+                                                                Payment By<span style="color:red;">*</span>
+                                                            </label>
+                                                            <input type="text" name="payment_by"
+                                                                id="payment_by{{ $user->id }}"
+                                                                class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('payment_by') border-red-500 @enderror"
+                                                                value="{{ old('payment_by') }}" required>
+                                                            @error('payment_by')
+                                                                <span
+                                                                    class="text-red-600 text-sm">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="p-4 border-t flex justify-end gap-2">
+                                                        <button type="submit"
+                                                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                                                            id="PayoutButton{{ $user->id }}"
+                                                            onclick="handlePayout('{{ $user->id }}')">
+                                                            Submit
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+
+
+                                        <script>
+                                            function handlePayout(userId) {
+                                                // Get the approve button
+                                                const PayoutButton = document.getElementById(`PayoutButton${userId}`);
+                                                // Disable the button and indicate it's processing
+                                                PayoutButton.disabled = true;
+                                                PayoutButton.innerText = 'Processing...';
+
+                                                // Allow the form to submit
+                                                PayoutButton.closest('form').submit();
+                                            }
+
+                                            document.querySelectorAll('[data-modal-target]').forEach(button => {
+                                                button.addEventListener('click', () => {
+                                                    const modalId = button.getAttribute('data-modal-target');
+                                                    document.querySelector(modalId).classList.remove('hidden');
+                                                });
+                                            });
+
+                                            function closeModal(userId) {
+                                                document.getElementById(`approveModal${userId}`).classList.add('hidden');
+                                            }
+                                        </script>
                                     </td>
                                 </tr>
                             @empty
@@ -105,115 +230,8 @@
                 <div class="mt-4 px-4 py-4">
                     {{ $users->links() }}
                 </div>
-                @foreach ($users as $user)
-                    <div id="approveModal{{ $user->id }}"
-                        class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center 
-                       @if ($errors->any() && old('user_id') == $user->id) @else hidden @endif">
-                        <div class="bg-white w-1/3 rounded-lg shadow-lg">
-                            <form method="POST" action="{{ route('commission.payout', $user->id) }}">
-                                @csrf
-                                <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                <div class="p-4 border-b flex justify-between items-center">
-                                    <h5 class="text-lg font-semibold">Current Balance:
-                                        ${{ number_format($user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount'), 2) }}
-                                    </h5>
-                                    <!-- Close Button -->
-                                    <button type="button" class="text-gray-500 hover:text-gray-700"
-                                        onclick="closeModal('{{ $user->id }}')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="p-4">
-                                    @if (session('error') && old('user_id') == $user->id)
-                                        <div
-                                            class="alert alert-danger text-red-600 p-2 mb-4 border border-red-300 rounded">
-                                            {{ session('error') }}
-                                        </div>
-                                    @endif
-
-                                    <div class="mb-3">
-                                        <label for="amount{{ $user->id }}"
-                                            class="block text-sm font-medium text-gray-700 mb-2">
-                                            Payout Amount<span style="color:red;">*</span>
-                                        </label>
-                                        <input type="number" name="amount" id="amount{{ $user->id }}"
-                                            class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('amount') border-red-500 @enderror"
-                                            min="0"
-                                            max="{{ number_format($user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount'), 2) }}"
-                                            value="{{ old('amount') }}" required>
-                                        @error('amount')
-                                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="remarks{{ $user->id }}"
-                                            class="block text-sm font-medium text-gray-700 mb-2">
-                                            Remarks<span style="color:red;">*</span>
-                                        </label>
-                                        <input type="text" name="remarks" id="remarks{{ $user->id }}"
-                                            class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('remarks') border-red-500 @enderror"
-                                            value="{{ old('remarks') }}" required>
-                                        @error('remarks')
-                                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="payment_by{{ $user->id }}"
-                                            class="block text-sm font-medium text-gray-700 mb-2">
-                                            Payment By<span style="color:red;">*</span>
-                                        </label>
-                                        <input type="text" name="payment_by" id="payment_by{{ $user->id }}"
-                                            class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('payment_by') border-red-500 @enderror"
-                                            value="{{ old('payment_by') }}" required>
-                                        @error('payment_by')
-                                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="p-4 border-t flex justify-end gap-2">
-                                    <button type="submit"
-                                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-                                        id="PayoutButton{{ $user->id }}"
-                                        onclick="handlePayout('{{ $user->id }}')">
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
 
 
-                <script>
-                    function handlePayout(userId) {
-                        // Get the approve button
-                        const PayoutButton = document.getElementById(`PayoutButton${userId}`);
-                        // Disable the button and indicate it's processing
-                        PayoutButton.disabled = true;
-                        PayoutButton.innerText = 'Processing...';
-
-                        // Allow the form to submit
-                        PayoutButton.closest('form').submit();
-                    }
-
-                    document.querySelectorAll('[data-modal-target]').forEach(button => {
-                        button.addEventListener('click', () => {
-                            const modalId = button.getAttribute('data-modal-target');
-                            document.querySelector(modalId).classList.remove('hidden');
-                        });
-                    });
-
-                    function closeModal(userId) {
-                        document.getElementById(`approveModal${userId}`).classList.add('hidden');
-                    }
-                </script>
 
 
             </div>

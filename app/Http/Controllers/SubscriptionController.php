@@ -165,4 +165,24 @@ class SubscriptionController extends Controller
 
        
     }
+
+    public function earnHistory($userId)
+    {
+       
+        $user = User::findOrFail($userId);
+        $earnHistory = Commission::where('affiliate_user_id', $userId)->latest()->paginate(10);
+    
+
+        return view('affiliate.admin_earn_history', compact('earnHistory','user'));
+    }
+    public function payoutHistory($userId)
+    {
+       
+        $user = User::findOrFail($userId);
+        $payoutHistory = Payout::where('affiliate_user_id', $userId)->latest()->paginate(10);
+    
+
+        return view('affiliate.admin_payout_history', compact('payoutHistory','user'));
+    }
+    
 }

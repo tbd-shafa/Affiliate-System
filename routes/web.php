@@ -54,6 +54,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/commission-percentage/{id}/update', [SubscriptionController::class, 'updateCommisionPercentage'])->name('commission.update');
         Route::get('/affiliate-commission/{role}', [SubscriptionController::class, 'viewAffiliateCommision'])->name('affiliate.commission');
         Route::post('/affiliate-commission/{id}/payout', [SubscriptionController::class, 'commissionPayout'])->name('commission.payout');
+        Route::get('/admin/affiliate/earn-history/{user}', [SubscriptionController::class, 'earnHistory'])->name('admin.affiliate.earn.history');
+        Route::get('/admin/affiliate/payout-history/{user}', [SubscriptionController::class, 'payoutHistory'])->name('admin.affiliate.payout.history');
+
     });
 
 
