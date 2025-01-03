@@ -78,7 +78,11 @@ class User extends Authenticatable
         return $this->hasMany(Commission::class, 'affiliate_user_id', 'id');
     }
 
-    
+    public function payouts()
+    {
+        return $this->hasMany(Payout::class, 'affiliate_user_id', 'id');
+    }
+
 
 
     public function roles(): BelongsToMany

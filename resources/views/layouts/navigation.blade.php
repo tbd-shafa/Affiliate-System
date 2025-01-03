@@ -69,6 +69,11 @@
                     <x-nav-link href="{{ route('commission.percentage') }}" :active="request()->routeIs('commission.percentage')">
                         {{ __('Commission Percentage') }}
                     </x-nav-link>
+
+                     <x-nav-link href="{{ route('affiliate.commission', ['role' => 'affiliate_user']) }}" :active="request()->routeIs('affiliate.commission')">
+                        {{ __('Affiliate Commission') }}
+                    </x-nav-link>
+
                 @endif
 
                 @if (Auth::user()->roles->contains('name', 'user') || Auth::user()->roles->contains('name', 'affiliate_user'))

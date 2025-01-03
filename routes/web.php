@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/commission-percentage', [SubscriptionController::class, 'viewCommisionPercentage'])->name('commission.percentage');
         Route::get('/commission-percentage/{id}/edit', [SubscriptionController::class, 'editCommisionPercentage'])->name('commission.edit');
         Route::put('/commission-percentage/{id}/update', [SubscriptionController::class, 'updateCommisionPercentage'])->name('commission.update');
+        Route::get('/affiliate-commission/{role}', [SubscriptionController::class, 'viewAffiliateCommision'])->name('affiliate.commission');
+        Route::post('/affiliate-commission/{id}/payout', [SubscriptionController::class, 'commissionPayout'])->name('commission.payout');
     });
 
 

@@ -9,6 +9,7 @@ use App\Models\AffiliateReferral;
 use App\Models\UserDetail;
 use App\Models\Commission;
 use App\Models\Subscription;
+use App\Models\Payout;
 use App\Models\User;
 
 class SubscriptionController extends Controller
@@ -104,13 +105,13 @@ class SubscriptionController extends Controller
         return view('subscriptions.percentage_edit', compact('user'));
     }
 
-   
+
 
     public function updateCommisionPercentage(Request $request, $id)
     {
-       
+
         $request->validate([
-            
+
             'percentage' => 'required|numeric|min:0|max:100',
         ]);
 
@@ -125,5 +126,43 @@ class SubscriptionController extends Controller
         }
 
         return redirect()->route('commission.percentage')->with('success', 'Commission percentage updated successfully.');
+    }
+
+    public function viewAffiliateCommision($role)
+    {
+        $users = User::whereHas('roles', function ($query) use ($role) {
+            $query->where('name', $role);
+        })
+            ->orderBy('created_at', 'desc') // Order by creation date, latest first
+            ->paginate(10);
+
+        return view('affiliate.commission_users', compact('users', 'role'));
+    }
+
+    public function commissionPayout(Request $request, $id)
+    {
+       
+        $user = User::findOrFail($id);
+        $currentBalance = $user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount');
+        
+        // Validate input
+        $validated = $request->validate([
+            'amount' => ['required', 'numeric', 'min:0', 'max:' . $currentBalance],
+            'remarks' => ['required'],
+            'payment_by' => ['required', 'string', 'max:255'],
+        ]);
+     
+        // Process payout logic here
+        Payout::create([
+            'affiliate_user_id' => $id,
+            'amount' => $validated['amount'],
+            'payment_by' => $validated['payment_by'],
+            'remarks' => $validated['remarks'],
+        ]);
+
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Payout processed successfully!');
+
+       
     }
 }
