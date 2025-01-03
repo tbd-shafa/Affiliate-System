@@ -95,14 +95,22 @@
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-
-                                        <button class=text-yellow-600 hover:text-yellow-900"
-                                            data-modal-target="#approveModal{{ $user->id }}">
-                                            Make Payout
-                                        </button>
+                                        @php
+                                            $availableBalance =
+                                                $user->commissions()->sum('earn_amount') -
+                                                $user->payouts()->sum('amount');
+                                        @endphp
+                                        
+                                          
+                                          <button 
+                                                class="@if($availableBalance <= 0) text-gray-400 cursor-not-allowed @else text-yellow-600 hover:text-yellow-900 @endif"
+                                                data-modal-target="#approveModal{{ $user->id }}"
+                                                @if($availableBalance <= 0) disabled @endif>
+                                                Make Payout
+                                           </button>
                                         <div id="approveModal{{ $user->id }}"
                                             class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center 
-                       @if ($errors->any() && old('user_id') == $user->id) @else hidden @endif">
+                                            @if ($errors->any() && old('user_id') == $user->id) @else hidden @endif">
                                             <div class="bg-white w-1/3 rounded-lg shadow-lg">
                                                 <form method="POST"
                                                     action="{{ route('commission.payout', $user->id) }}">
@@ -190,9 +198,6 @@
                                                 </form>
                                             </div>
                                         </div>
-
-
-
                                         <script>
                                             function handlePayout(userId) {
                                                 // Get the approve button
