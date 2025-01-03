@@ -100,14 +100,14 @@
                                                 $user->commissions()->sum('earn_amount') -
                                                 $user->payouts()->sum('amount');
                                         @endphp
-                                        
-                                          
-                                          <button 
-                                                class="@if($availableBalance <= 0) text-gray-400 cursor-not-allowed @else text-yellow-600 hover:text-yellow-900 @endif"
-                                                data-modal-target="#approveModal{{ $user->id }}"
-                                                @if($availableBalance <= 0) disabled @endif>
-                                                Make Payout
-                                           </button>
+
+
+                                        <button
+                                            class="@if ($availableBalance <= 0) text-gray-400 cursor-not-allowed @else text-yellow-600 hover:text-yellow-900 @endif"
+                                            data-modal-target="#approveModal{{ $user->id }}"
+                                            @if ($availableBalance <= 0) disabled @endif>
+                                            Make Payout
+                                        </button>
                                         <div id="approveModal{{ $user->id }}"
                                             class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center 
                                             @if ($errors->any() && old('user_id') == $user->id) @else hidden @endif">
@@ -132,12 +132,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="p-4">
-                                                        @if (session('error') && old('user_id') == $user->id)
-                                                            <div
-                                                                class="alert alert-danger text-red-600 p-2 mb-4 border border-red-300 rounded">
-                                                                {{ session('error') }}
-                                                            </div>
-                                                        @endif
+
 
                                                         <div class="mb-3">
                                                             <label for="amount{{ $user->id }}"
@@ -209,16 +204,41 @@
                                                 // Allow the form to submit
                                                 PayoutButton.closest('form').submit();
                                             }
-
                                             document.querySelectorAll('[data-modal-target]').forEach(button => {
                                                 button.addEventListener('click', () => {
                                                     const modalId = button.getAttribute('data-modal-target');
-                                                    document.querySelector(modalId).classList.remove('hidden');
+                                                    const modal = document.querySelector(modalId);
+
+                                                    // Reset the modal content
+                                                    resetModalContent(modal);
+
+                                                    // Show the modal
+                                                    modal.classList.remove('hidden');
                                                 });
                                             });
 
                                             function closeModal(userId) {
-                                                document.getElementById(`approveModal${userId}`).classList.add('hidden');
+                                                const modal = document.getElementById(`approveModal${userId}`);
+                                                modal.classList.add('hidden');
+                                                resetModalContent(modal);
+                                            }
+
+                                            function resetModalContent(modal) {
+                                                // Reset form inputs
+                                                const form = modal.querySelector('form');
+                                                if (form) {
+                                                    form.reset(); // Resets all input fields
+                                                }
+
+                                                // Clear error messages
+                                                modal.querySelectorAll('.text-red-600').forEach(errorMessage => {
+                                                    errorMessage.textContent = ''; // Clear error text
+                                                });
+
+                                                // Remove error classes from input fields
+                                                modal.querySelectorAll('.border-red-500').forEach(inputField => {
+                                                    inputField.classList.remove('border-red-500');
+                                                });
                                             }
                                         </script>
                                     </td>
