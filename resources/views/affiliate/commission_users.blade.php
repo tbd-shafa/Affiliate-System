@@ -141,7 +141,7 @@
                                                             </label>
                                                             <input type="number" name="amount"
                                                                 id="amount{{ $user->id }}"
-                                                                class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('amount') border-red-500 @enderror"
+                                                                class="block mb-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('amount') border-red-500 @enderror"
                                                                 min="0"
                                                                 max="{{ number_format($user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount'), 2) }}"
                                                                 value="{{ old('amount') }}" required>
@@ -153,12 +153,12 @@
 
                                                         <div class="mb-3">
                                                             <label for="remarks{{ $user->id }}"
-                                                                class="block text-sm font-medium text-gray-700 mb-2">
+                                                                class="block  text-sm font-medium text-gray-700 mb-2">
                                                                 Remarks<span style="color:red;">*</span>
                                                             </label>
                                                             <input type="text" name="remarks"
                                                                 id="remarks{{ $user->id }}"
-                                                                class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('remarks') border-red-500 @enderror"
+                                                                class="block mb-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('remarks') border-red-500 @enderror"
                                                                 value="{{ old('remarks') }}" required>
                                                             @error('remarks')
                                                                 <span
@@ -173,7 +173,7 @@
                                                             </label>
                                                             <input type="text" name="payment_by"
                                                                 id="payment_by{{ $user->id }}"
-                                                                class="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('payment_by') border-red-500 @enderror"
+                                                                class="block  mb-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('payment_by') border-red-500 @enderror"
                                                                 value="{{ old('payment_by') }}" required>
                                                             @error('payment_by')
                                                                 <span
