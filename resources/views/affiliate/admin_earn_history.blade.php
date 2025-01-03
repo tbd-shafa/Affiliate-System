@@ -6,7 +6,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex items-center justify-between " style="padding:15px;">
                     <h2 class="font-bold text-xl text-gray-800 leading-tight">
-                      {{ $user->name }} Earh History
+                      Earh History Of  {{ $user->name }}
                     </h2>
                 </div>
 

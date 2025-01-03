@@ -32,12 +32,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/affiliate/link', [AffiliateController::class, 'link'])->name('affiliate.link');
     });
 
-    // Manage Affiliate - Only for admin
-    Route::middleware('check.role:admin')->group(function () {
-        Route::get('/admin/affiliate-requests', [AffiliateController::class, 'showPendingRequests'])->name('affiliate.requests');
-        Route::post('/admin/affiliate-requests/{id}/approve', [AffiliateController::class, 'approveRequest'])->name('affiliate.approve');
-        Route::post('/admin/affiliate-requests/{id}/reject', [AffiliateController::class, 'rejectRequest'])->name('affiliate.reject');
-    });
+   
 
     // Manage subscription and create affiliate
 
@@ -48,8 +43,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/subscriptions/buy', [SubscriptionController::class, 'buySubscription'])->name('subscriptions.buy');
     });
 
-    //manage commision percentage
+    //manage commision percentage && Manage Affiliate
     Route::middleware('check.role:admin')->group(function () {
+        Route::get('/admin/affiliate-requests', [AffiliateController::class, 'showPendingRequests'])->name('affiliate.requests');
+        Route::post('/admin/affiliate-requests/{id}/approve', [AffiliateController::class, 'approveRequest'])->name('affiliate.approve');
+        Route::post('/admin/affiliate-requests/{id}/reject', [AffiliateController::class, 'rejectRequest'])->name('affiliate.reject');
         Route::get('/commission-percentage', [SubscriptionController::class, 'viewCommisionPercentage'])->name('commission.percentage');
         Route::get('/commission-percentage/{id}/edit', [SubscriptionController::class, 'editCommisionPercentage'])->name('commission.edit');
         Route::put('/commission-percentage/{id}/update', [SubscriptionController::class, 'updateCommisionPercentage'])->name('commission.update');

@@ -229,8 +229,10 @@ class AffiliateController extends Controller
     {
         $userId = auth()->user()->id;
         $totalCommission = Commission::where('affiliate_user_id', $userId)->sum('earn_amount');
+        $totalPayout = Payout::where('affiliate_user_id', $userId)->sum('amount');
+        $currentCommision = $totalCommission - $totalPayout;
 
-        return view('affiliate.commission_balance', compact('totalCommission'));
+        return view('affiliate.commission_balance', compact('currentCommision' ,'totalCommission'));
     }
 
 
