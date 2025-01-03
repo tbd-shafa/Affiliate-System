@@ -15,6 +15,7 @@ use App\Models\Commission;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\UserDetail;
+use App\Models\Payout;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -262,4 +263,12 @@ class AffiliateController extends Controller
         return view('affiliate.earn_history', compact('earnHistory'));
     }
     
+    public function payoutHistory()
+    {
+        $userId = auth()->user()->id;
+        $payoutHistory = Payout::where('affiliate_user_id', $userId)->latest()->paginate(10);
+    
+
+        return view('affiliate.payout_history', compact('payoutHistory'));
+    }
 }

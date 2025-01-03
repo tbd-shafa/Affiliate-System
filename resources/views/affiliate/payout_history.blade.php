@@ -1,13 +1,14 @@
 
 
-   <x-app-layout>
-    <div class="py-12">
+ @extends('affiliate.affiliate-panel')
+
+@section('content')
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex items-center justify-between " style="padding:15px;">
                     <h2 class="font-bold text-xl text-gray-800 leading-tight">
-                      {{ $user->name }} Payout History
+                    Payout History
                     </h2>
                 </div>
 
@@ -58,7 +59,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-</x-app-layout>
+@endsection
 

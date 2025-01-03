@@ -17,6 +17,9 @@
                         <x-nav-link href="{{ route('affiliate.earn.history') }}" :active="request()->routeIs('affiliate.earn.history')">
                             {{ __('Earn History') }}
                         </x-nav-link>
+                         <x-nav-link href="{{ route('affiliate.payout.history') }}" :active="request()->routeIs('affiliate.payout.history')">
+                            {{ __('Payout History') }}
+                        </x-nav-link>
                     </div>
 
 
