@@ -19,8 +19,8 @@ class UserController extends Controller
         $users = User::whereHas('roles', function ($query) use ($role) {
             $query->where('name', $role);
         })
-        ->orderBy('created_at', 'desc') // Order by creation date, latest first
-        ->paginate(10);
+            ->orderBy('created_at', 'desc') // Order by creation date, latest first
+            ->paginate(10);
 
         return view('users.index', compact('users', 'role'));
     }
@@ -41,7 +41,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'roles' => 'required|array|min:1',
             'password' => 'required|string|min:8|confirmed',
-            
+
             'address' => 'nullable|string',
             'acc_name' => 'nullable|string',
             'acc_no' => 'nullable|string|max:34',
@@ -99,7 +99,7 @@ class UserController extends Controller
             $affiliateCode = strtoupper(Str::random(10));
             // Ensure the affiliate code is unique
             while (UserDetail::where('affiliate_code', $affiliateCode)->exists()) {
-               
+
                 $affiliateCode = strtoupper(Str::random(10));
             }
 
@@ -123,7 +123,7 @@ class UserController extends Controller
             ->with('success', "User  created successfully!");
     }
 
-    
+
     public function edit($id)
     {
         $user = User::find($id);
@@ -148,7 +148,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        
+
         $user = User::find($id);
         if (!$user) {
             abort(404, 'User not found');
@@ -175,7 +175,7 @@ class UserController extends Controller
             ],
             'percentage_value' => 'nullable|numeric|min:0|max:100',
         ]);
-      
+
         // Update user
         $user->update([
             'name' => $validatedData['name'],
@@ -212,7 +212,7 @@ class UserController extends Controller
             $affiliateCode = strtoupper(Str::random(10));
             // Ensure the affiliate code is unique
             while (UserDetail::where('affiliate_code', $affiliateCode)->exists()) {
-               
+
                 $affiliateCode = strtoupper(Str::random(10));
             }
             // If 'affiliate_user' role is selected
@@ -252,7 +252,32 @@ class UserController extends Controller
             $user->details->save();
         }
         return redirect()->back()
-        ->with('success', ' User Has Been Deleted successfully.');
+            ->with('success', ' User Has Been Deleted successfully.');
+    }
+
+    public function toggleAffiliateStatus(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:user_details,user_id',
+            'status' => 'required|in:enable,disable',
+        ]);
        
+      
+        $userDetail = UserDetail::find($request->user_id);
+
+        if ($userDetail) {
+            $userDetail->affiliate_status = $request->status;
+            $userDetail->update();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Affiliate status updated successfully.',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update affiliate status.',
+        ], 500);
     }
 }
