@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
+
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\Role;
+use App\Models\Commission;
 // use App\Models\AffiliateUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -35,7 +36,7 @@ class UserController extends Controller
 
     public function store(Request $request, $role)
     {
-       
+
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -158,6 +159,7 @@ class UserController extends Controller
             abort(404, 'User not found');
         }
 
+
         // Validate data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -267,8 +269,8 @@ class UserController extends Controller
             'user_id' => 'required|exists:user_details,user_id',
             'status' => 'required|in:enable,disable',
         ]);
-       
-      
+
+
         $userDetail = UserDetail::find($request->user_id);
 
         if ($userDetail) {
@@ -285,5 +287,13 @@ class UserController extends Controller
             'success' => false,
             'message' => 'Failed to update affiliate status.',
         ], 500);
+    }
+
+    public function checkCommissions($userId)
+    {
+        // Check if there are any commissions for this user
+        $hasCommissions = Commission::where('affiliate_user_id', $userId)->exists();
+
+        return response()->json(['has_commissions' => $hasCommissions]);
     }
 }

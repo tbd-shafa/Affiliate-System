@@ -194,17 +194,13 @@
                                         </div>
 
                                     </div>
-                                    <!-- SweetAlert2 CDN -->
-                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             const affiliateFields = document.getElementById('affiliate-fields');
                                             const roleCheckboxes = document.querySelectorAll('.role-checkbox');
                                             const affiliateInputs = affiliateFields.querySelectorAll('input');
-                                            const userId = '{{ $user->id }}'; // Pass user ID to JS for API request
 
-                                            // Function to toggle the display of affiliate fields
                                             function toggleAffiliateFields() {
                                                 const isAffiliateChecked = Array.from(roleCheckboxes).some(
                                                     checkbox => checkbox.checked && checkbox.value === 'affiliate_user'
@@ -223,42 +219,14 @@
                                                 }
                                             }
 
-                                            // Event listener to handle role checkbox change
                                             roleCheckboxes.forEach(checkbox => {
-                                                checkbox.addEventListener('change', async function() {
-                                                    if (this.value === 'affiliate_user' && !this.checked) {
-                                                        // Check if the user has commissions before unchecking the affiliate_user role
-                                                        const response = await fetch(
-                                                            "{{ route('check-commissions', ':userId') }}".replace(
-                                                                ':userId', userId));
-                                                        const data = await response.json();
-
-                                                        if (data.has_commissions) {
-                                                            // Show SweetAlert message if user has commissions
-                                                            Swal.fire({
-                                                                icon: 'error',
-                                                                title: 'Sorry!',
-                                                                text: 'This user has commissions. You cannot change this role.',
-                                                                confirmButtonText: 'OK'
-                                                            });
-
-                                                            // Revert checkbox state if commissions exist
-                                                            this.checked = true;
-                                                        } else {
-                                                            // If no commissions, allow role change
-                                                            toggleAffiliateFields();
-                                                        }
-                                                    } else {
-                                                        toggleAffiliateFields();
-                                                    }
-                                                });
+                                                checkbox.addEventListener('change', toggleAffiliateFields);
                                             });
 
                                             // Initialize on page load
                                             toggleAffiliateFields();
                                         });
                                     </script>
-
                                     <!--  affiliate status  -->
                                     <div class="md-3">
                                         <x-input-label for="" class="inline-flex items-center">

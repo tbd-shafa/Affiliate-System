@@ -57,6 +57,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/affiliate/payout-history/{user}', [SubscriptionController::class, 'payoutHistory'])->name('admin.affiliate.payout.history');
         //toggle affiliate user status to enable or disable
         Route::post('/toggle-affiliate-status', [UserController::class, 'toggleAffiliateStatus'])->name('toggle.affiliate.status');
+        Route::get('/check-commissions/{userId}', [UserController::class, 'checkCommissions'])->name('check-commissions');;
+
 
     });
 
