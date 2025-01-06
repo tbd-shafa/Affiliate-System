@@ -1,5 +1,5 @@
 <x-app-layout>
-
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -56,7 +56,9 @@
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Current Commisions</th>
-
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Affiliate Status</th>
 
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -93,7 +95,15 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         ${{ number_format($user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount'), 2) }}
                                     </td>
-
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <label class="switch">
+                                            <input type="checkbox" class="toggle-affiliate-status"
+                                                data-user-id="{{ $user->id }}"
+                                                {{ $user->userDetail->affiliate_status === 'enable' ? 'checked' : '' }}>
+                                            <span class="slider round"></span>
+                                        </label>
+                                        
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         @php
                                             $availableBalance =
@@ -109,7 +119,7 @@
                                             Make Payout
                                         </button>
                                         <div id="approveModal{{ $user->id }}"
-                                            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center 
+                                            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-10
                                             @if ($errors->any() && old('user_id') == $user->id) @else hidden @endif">
                                             <div class="bg-white w-1/3 rounded-lg shadow-lg">
                                                 <form method="POST"
@@ -262,5 +272,50 @@
             </div>
         </div>
     </div>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.querySelectorAll('.toggle-affiliate-status').forEach(button => {
+            button.addEventListener('change', function() {
+                const userId = this.getAttribute('data-user-id');
+                const newStatus = this.checked ? 'enable' : 'disable';
 
+                Swal.fire({
+                    title: `Are you sure you want to ${newStatus} affiliate status?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, do it!',
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        fetch('{{ route('toggle.affiliate.status') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    user_id: userId,
+                                    status: newStatus
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Success!', data.message, 'success');
+                                } else {
+                                    Swal.fire('Error!', data.message, 'error');
+                                    this.checked = !this
+                                        .checked; // Revert the checkbox if error
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire('Error!', 'Something went wrong.', 'error');
+                                this.checked = !this.checked; // Revert the checkbox if error
+                            });
+                    } else {
+                        this.checked = !this.checked; // Revert the checkbox if cancelled
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
