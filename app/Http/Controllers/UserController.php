@@ -116,7 +116,7 @@ class UserController extends Controller
             $userDetailsData['percentage_value'] = $validatedData['percentage_value'] ?? null;
             $userDetailsData['status'] = 'approved';
             $userDetailsData['affiliate_code'] = $affiliateCode;
-            $userDetailsData['affiliate_status'] = 'enable';
+            $userDetailsData['affiliate_status'] = $request->affiliate_status;
         }
 
         // Step 4: Insert user details

@@ -27,7 +27,14 @@
                                 Copy Link
                             </button>
                         </div>
-                        <p>Share your affiliate link for earnings.</p>
+                       
+                         @if ($userDetails && $userDetails->affiliate_status === 'disable')
+                         <p>Sorry! Your Affiliate Link Currently Disabled  Your LInk Won't Work</p>
+                         @endif
+
+                         @if ($userDetails && $userDetails->affiliate_status === 'enable')
+                          <p>Share your affiliate link for earnings.</p>
+                         @endif
 
                         <script>
                             document.getElementById('copy-link-btn').addEventListener('click', function(event) {

@@ -113,6 +113,7 @@ class RegisteredUserController extends Controller
             'percentage_value' => null,
             'status' => 'just_created', // Default status
             'affiliate_code' => null, // Generate a unique affiliate code
+            'affiliate_status' => null, // Generate a unique affiliate code
         ]);
 
 
@@ -122,8 +123,10 @@ class RegisteredUserController extends Controller
         if ($referrerCode) {
             // Set the cookie for the referral code
 
-            $referrerDetails = UserDetail::where('affiliate_code', $referrerCode)
+
+             $referrerDetails = UserDetail::where('affiliate_code', $referrerCode)
                 ->where('status', 'approved')
+                ->where('affiliate_status', 'enable') // Check if affiliate status is enabled
                 ->first();
 
             if ($referrerDetails) {

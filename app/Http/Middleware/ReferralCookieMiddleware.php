@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-
+use App\Models\UserDetail;
 
 class ReferralCookieMiddleware
 {
@@ -32,8 +32,18 @@ class ReferralCookieMiddleware
         $referrerCode = $request->query('referrer') ?: '';
 
         if (!empty($referrerCode)) {
-            // Set the referral cookie with a dynamic expiration time (default is 24 hours)
-            Cookie::queue('referrer_code', $referrerCode, $expirationTime);
+
+            $referrerDetails = UserDetail::where('affiliate_code', $referrerCode)
+            ->where('affiliate_status', 'enable')
+            ->first();
+            
+           
+            if ($referrerDetails) {
+                
+                // Set the referral cookie with a dynamic expiration time (default is 24*7 hours)
+                Cookie::queue('referrer_code', $referrerCode, $expirationTime);
+            }
+            
         }
 
         return $next($request);
