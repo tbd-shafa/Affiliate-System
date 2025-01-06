@@ -70,10 +70,10 @@
                         {{ __('Commission Percentage') }}
                     </x-nav-link>
 
-                     <x-nav-link href="{{ route('affiliate.commission', ['role' => 'affiliate_user']) }}" :active="request()->routeIs('affiliate.commission')">
+                    <x-nav-link href="{{ route('affiliate.commission', ['role' => 'affiliate_user']) }}"
+                        :active="request()->routeIs('affiliate.commission')">
                         {{ __('Affiliate Commission') }}
                     </x-nav-link>
-
                 @endif
 
                 @if (Auth::user()->roles->contains('name', 'user') || Auth::user()->roles->contains('name', 'affiliate_user'))
@@ -109,13 +109,16 @@
                 @if (Auth::user()->roles->contains('name', 'affiliate_user'))
                     <!-- Affiliate-specific links -->
                     @if (Auth::user()->affiliateUser && Auth::user()->affiliateUser->status === 'approved')
-                        
+                        <x-nav-link href="{{ route('affiliate.link') }}" :active="request()->routeIs('affiliate.link') ||
+                            request()->routeIs('affiliate.commission.balance') ||
+                            request()->routeIs('affiliate.referred.users') ||
+                            request()->routeIs('affiliate.earn.history') ||
+                            request()->routeIs('affiliate.payout.history')">
+                            {{ __('Affiliate Panel') }}
+                        </x-nav-link>
 
-                        <x-nav-link href="{{ route('affiliate.link') }}" :active="request()->routeIs('affiliate.link')">
-                        {{ __('Affiliate Panel') }}
-                       </x-nav-link>
 
-                      {{--  <x-nav-link href="{{ route('affiliate.commission.balance') }}" :active="request()->routeIs('affiliate-link')">
+                        {{--  <x-nav-link href="{{ route('affiliate.commission.balance') }}" :active="request()->routeIs('affiliate-link')">
                             {{ __('Current Commission Balance') }}
                         </x-nav-link>
                         <x-nav-link href="{{ route('affiliate.referred.users') }}" :active="request()->routeIs('affiliate-link')">
@@ -124,7 +127,6 @@
                         <x-nav-link href="{{ route('affiliate.earn.history') }}" :active="request()->routeIs('affiliate-link')">
                             {{ __('Earn History') }}
                         </x-nav-link>  --}}
-                        
                     @endif
                 @endif
 
