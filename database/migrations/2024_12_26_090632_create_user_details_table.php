@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('percentage_value', 5, 2)->nullable();  //percentage setting vale
             $table->enum('status', ['pending', 'approved', 'rejected','Deleted','just_created'])->default('just_created');
             $table->string('affiliate_code')->nullable();
+            $table->enum('affiliate_status', ['enable', 'disable'])->nullable();
             $table->timestamps(); // Created and updated timestamps
         });
     }

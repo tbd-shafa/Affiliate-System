@@ -7,15 +7,22 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+          
+            <x-input-label for="email" class="inline-flex items-center">
+                                <span>{{ __('Email') }}</span>
+                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+             </x-input-label>
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
+            
+            <x-input-label for="password" class="inline-flex items-center">
+                                <span>{{ __('Password') }}</span>
+                                <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
+            </x-input-label>
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
                             name="password"
