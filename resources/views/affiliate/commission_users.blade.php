@@ -152,7 +152,7 @@
                                                             <input type="number" name="amount"
                                                                 id="amount{{ $user->id }}"
                                                                 class="block mb-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('amount') border-red-500 @enderror"
-                                                                min="0"
+                                                                min="0.1"
                                                                 max="{{ number_format($user->commissions()->sum('earn_amount') - $user->payouts()->sum('amount'), 2) }}"
                                                                 value="{{ old('amount') }}" required>
                                                             @error('amount')

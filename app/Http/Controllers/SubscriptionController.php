@@ -147,7 +147,7 @@ class SubscriptionController extends Controller
         
         // Validate input
         $validated = $request->validate([
-            'amount' => ['required', 'numeric', 'min:0', 'max:' . $currentBalance],
+            'amount' => ['required', 'numeric', 'min:0.1', 'max:' . $currentBalance],
             'remarks' => ['required'],
             'payment_by' => ['required', 'string', 'max:255'],
         ]);
