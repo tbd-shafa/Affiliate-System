@@ -36,31 +36,16 @@ class UserController extends Controller
 
     public function store(Request $request, $role)
     {
+        
 
-
-        $validatedData = $request->validate([
+         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'roles' => 'required|array|min:1',
             'password' => 'required|string|min:8|confirmed',
-
-            'address' => 'nullable|string',
-            'acc_name' => 'nullable|string',
-            'acc_no' => 'nullable|string|max:34',
-            'bank_name' => 'nullable|string',
-            'branch_address' => 'nullable|string',
-            //'phone_number' => 'nullable|string',
-            'phone_number' => [
-                'required',
-                'string',
-                'regex:/^(\+?[1-9]\d{1,14}|0\d{10})$/',
-                'min:11',
-                'max:14', // E.164 format (max length 15)
-            ],
-            'percentage_value' => 'nullable|numeric|min:0|max:100',
-            'affiliate_status' => 'nullable|in:enable,disable',
-        ]);
-
+            
+         ]);
+        
         // Step 1: Create the user
         $user = User::create([
             'name' => $validatedData['name'],
@@ -100,6 +85,22 @@ class UserController extends Controller
         ];
 
         if (in_array('affiliate_user', $validatedData['roles'])) {
+            $validatedData = array_merge($validatedData, $request->validate([
+                'address' => 'required|string',
+                'acc_name' => 'required|string',
+                'acc_no' => 'required|string|max:34',
+                'bank_name' => 'required|string',
+                'branch_address' => 'required|string',
+                'phone_number' => [
+                    'required',
+                    'string',
+                    'regex:/^(\+?[1-9]\d{1,14}|0\d{10})$/',
+                    'min:11',
+                    'max:14', // E.164 format (max length 15)
+                ],
+                'percentage_value' => 'required|numeric|min:0|max:100',
+                'affiliate_status' => 'nullable|in:enable,disable',
+            ]));
             $affiliateCode = strtoupper(Str::random(10));
             // Ensure the affiliate code is unique
             while (UserDetail::where('affiliate_code', $affiliateCode)->exists()) {
@@ -265,17 +266,20 @@ class UserController extends Controller
 
     public function toggleAffiliateStatus(Request $request)
     {
+        
         $request->validate([
             'user_id' => 'required|exists:user_details,user_id',
             'status' => 'required|in:enable,disable',
         ]);
 
 
-        $userDetail = UserDetail::find($request->user_id);
 
+       
+        $userDetail = UserDetail::where('user_id',$request->user_id)->first();
+        //dd($userDetail);
         if ($userDetail) {
             $userDetail->affiliate_status = $request->status;
-            $userDetail->update();
+            $userDetail->save();
 
             return response()->json([
                 'success' => true,

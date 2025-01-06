@@ -192,7 +192,22 @@
                                                 )" required />
                                             <x-input-error :messages="$errors->get('percentage_value')" class="mt-2" />
                                         </div>
+                                        <!--  affiliate status  -->
+                                        <div class="md-3">
+                                            <x-input-label for="" class="inline-flex items-center">
+                                                <span>{{ __('Affiliate Status') }}</span>
 
+                                            </x-input-label>
+                                            <label class="switch">
+                                                <!-- Hidden input ensures a default value of "disable" -->
+                                                <input type="hidden" name="affiliate_status" value="disable">
+                                                <!-- Checkbox for "enable" -->
+                                                <input type="checkbox" class="toggle-affiliate-status"
+                                                    name="affiliate_status" value="enable" data-user-id="59"
+                                                    {{ $user->userDetail->affiliate_status === 'enable' ? 'checked' : '' }}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
                                     </div>
                                     <!-- SweetAlert2 CDN -->
                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -201,7 +216,8 @@
                                         document.addEventListener('DOMContentLoaded', function() {
                                             const affiliateFields = document.getElementById('affiliate-fields');
                                             const roleCheckboxes = document.querySelectorAll('.role-checkbox');
-                                            const affiliateInputs = affiliateFields.querySelectorAll('input');
+                                            
+                                            const affiliateInputs = affiliateFields.querySelectorAll('input:not([name="affiliate_status"])');
                                             const userId = '{{ $user->id }}'; // Pass user ID to JS for API request
 
                                             // Function to toggle the display of affiliate fields
@@ -259,22 +275,7 @@
                                         });
                                     </script>
 
-                                    <!--  affiliate status  -->
-                                    <div class="md-3">
-                                        <x-input-label for="" class="inline-flex items-center">
-                                            <span>{{ __('Affiliate Status') }}</span>
 
-                                        </x-input-label>
-                                        <label class="switch">
-                                            <!-- Hidden input ensures a default value of "disable" -->
-                                            <input type="hidden" name="affiliate_status" value="disable">
-                                            <!-- Checkbox for "enable" -->
-                                            <input type="checkbox" class="toggle-affiliate-status"
-                                                name="affiliate_status" value="enable" data-user-id="59"
-                                                {{ $user->userDetail->affiliate_status === 'enable' ? 'checked' : '' }}>
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </div>
 
                                     <div class="flex items-center justify-end  py-4">
                                         <button type="submit"

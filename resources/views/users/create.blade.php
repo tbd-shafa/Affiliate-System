@@ -167,26 +167,36 @@
                                     <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
                                 </x-input-label>
                                 <x-text-input id="phone_number" class="block mt-1 w-full p-2 border rounded"
-                                    type="number" name="phone_number" required />
+                                    type="number" name="phone_number" :value="old('phone_number')" required />
                                 <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
                             </div>
-
-
-
-
-
 
                             <div class="mb-4">
 
                                 <x-input-label for="percentage_value" class="inline-flex items-center">
-                                    <span>{{ __('ommision Percentage') }}</span>
+                                    <span>{{ __('Commision Percentage') }}</span>
                                     <span class="text-red-500 ml-1">*</span> <!-- Red asterisk here -->
                                 </x-input-label>
                                 <x-text-input id="percentage_value" class="block mt-1 w-full p-2 border rounded"
                                     type="number" name="percentage_value" :value="10" required />
                                 <x-input-error :messages="$errors->get('percentage_value')" class="mt-2" />
                             </div>
+                            <div class="mb-4">
+                                <x-input-label for="affiliate_status" class="inline-flex items-center">
+                                    <span>{{ __('Affiliate Status') }}</span>
 
+                                </x-input-label>
+
+                                <label class="switch">
+                                    <!-- Hidden input ensures a value is submitted even if unchecked -->
+                                    <input type="hidden" name="affiliate_status" value="disable">
+                                    <input type="checkbox" class="toggle-affiliate-status" name="affiliate_status"
+                                        value="enable" checked>
+                                    <span class="slider round"></span>
+                                </label>
+
+
+                            </div>
                         </div>
 
                         <script>
@@ -222,22 +232,7 @@
                             });
                         </script>
 
-                        <div class="mb-4">
-                            <x-input-label for="affiliate_status" class="inline-flex items-center">
-                                <span>{{ __('Affiliate Status') }}</span>
 
-                            </x-input-label>
-
-                            <label class="switch">
-                                <!-- Hidden input ensures a value is submitted even if unchecked -->
-                                <input type="hidden" name="affiliate_status" value="disable">
-                                <input type="checkbox" class="toggle-affiliate-status" name="affiliate_status"
-                                    value="enable" checked>
-                                <span class="slider round"></span>
-                            </label>
-                            <x-input-error :messages="$errors->get('percentage_value')" class="mt-2" />
-
-                        </div>
                         <div class="flex items-center justify-end mt-4">
                             <button type="submit"
                                 class="inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">
