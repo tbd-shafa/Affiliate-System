@@ -1,4 +1,5 @@
 <x-app-layout>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             create Users
@@ -170,6 +171,11 @@
                                 <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
                             </div>
 
+
+
+
+
+
                             <div class="mb-4">
 
                                 <x-input-label for="percentage_value" class="inline-flex items-center">
@@ -216,6 +222,22 @@
                             });
                         </script>
 
+                        <div class="mb-4">
+                            <x-input-label for="affiliate_status" class="inline-flex items-center">
+                                <span>{{ __('Affiliate Status') }}</span>
+
+                            </x-input-label>
+
+                            <label class="switch">
+                                <!-- Hidden input ensures a value is submitted even if unchecked -->
+                                <input type="hidden" name="affiliate_status" value="disable">
+                                <input type="checkbox" class="toggle-affiliate-status" name="affiliate_status"
+                                    value="enable" checked>
+                                <span class="slider round"></span>
+                            </label>
+                            <x-input-error :messages="$errors->get('percentage_value')" class="mt-2" />
+
+                        </div>
                         <div class="flex items-center justify-end mt-4">
                             <button type="submit"
                                 class="inline-flex items-center bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">

@@ -35,6 +35,7 @@ class UserController extends Controller
 
     public function store(Request $request, $role)
     {
+       
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -56,6 +57,7 @@ class UserController extends Controller
                 'max:14', // E.164 format (max length 15)
             ],
             'percentage_value' => 'nullable|numeric|min:0|max:100',
+            'affiliate_status' => 'nullable|in:enable,disable',
         ]);
 
         // Step 1: Create the user
@@ -93,6 +95,7 @@ class UserController extends Controller
             'percentage_value' => null,
             'status' => 'just_created',
             'affiliate_code' => null,
+            'affiliate_status' => null,
         ];
 
         if (in_array('affiliate_user', $validatedData['roles'])) {
@@ -112,6 +115,7 @@ class UserController extends Controller
             $userDetailsData['percentage_value'] = $validatedData['percentage_value'] ?? null;
             $userDetailsData['status'] = 'approved';
             $userDetailsData['affiliate_code'] = $affiliateCode;
+            $userDetailsData['affiliate_status'] = 'enable';
         }
 
         // Step 4: Insert user details
@@ -174,6 +178,7 @@ class UserController extends Controller
                 'max:14', // E.164 format (max length 15)
             ],
             'percentage_value' => 'nullable|numeric|min:0|max:100',
+            'affiliate_status' => 'nullable|in:enable,disable',
         ]);
 
         // Update user
@@ -206,6 +211,7 @@ class UserController extends Controller
             'branch_address' => $validatedData['branch_address'] ?? null,
             'phone_number' => $validatedData['phone_number'] ?? null,
             'percentage_value' => $validatedData['percentage_value'] ?? null,
+            'affiliate_status' => $validatedData['affiliate_status'] ?? null,
         ];
 
         if ($hasAffiliateRole) {

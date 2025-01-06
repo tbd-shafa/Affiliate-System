@@ -1,5 +1,5 @@
 <x-app-layout>
-
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-2">
@@ -177,6 +177,14 @@
                                                 name="phone_number" :value="old('phone_number', $userDetails->phone_number ?? '')" required />
                                             <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
                                         </div>
+                                        <!--  affiliate status  -->
+
+
+
+
+
+
+
 
                                         <!-- Commision Percentage Value -->
                                         <div class="mb-4">
@@ -227,6 +235,21 @@
                                             toggleAffiliateFields();
                                         });
                                     </script>
+                                    <div class="md-3">
+                                        <x-input-label for="" class="inline-flex items-center">
+                                            <span>{{ __('Affiliate Status') }}</span>
+
+                                        </x-input-label>
+                                        <label class="switch">
+                                            <!-- Hidden input ensures a default value of "disable" -->
+                                            <input type="hidden" name="affiliate_status" value="disable">
+                                            <!-- Checkbox for "enable" -->
+                                            <input type="checkbox" class="toggle-affiliate-status"
+                                                name="affiliate_status" value="enable" data-user-id="59"
+                                                {{ $user->userDetail->affiliate_status === 'enable' ? 'checked' : '' }}>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
 
                                     <div class="flex items-center justify-end  py-4">
                                         <button type="submit"
