@@ -17,7 +17,7 @@
                         @method('PUT') <!-- Method override -->
 
                         <input type="hidden" name="user_id" value="{{ $user->user_id }}">
-                        <input type="hidden" name="user_id" value="{{ $user->user_id }}">
+                        
 
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">User Name</label>
