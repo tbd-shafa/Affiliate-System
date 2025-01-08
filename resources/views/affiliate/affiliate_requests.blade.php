@@ -241,15 +241,48 @@
                         approveButton.closest('form').submit();
                     }
 
+
+
                     document.querySelectorAll('[data-modal-target]').forEach(button => {
                         button.addEventListener('click', () => {
                             const modalId = button.getAttribute('data-modal-target');
-                            document.querySelector(modalId).classList.remove('hidden');
+                            const modal = document.querySelector(modalId);
+
+                            // Reset modal content and errors on opening
+                            resetModalContent(modal);
+
+                            // Show the modal
+                            modal.classList.remove('hidden');
                         });
                     });
 
-                    function closeModal(requestId) {
-                        document.getElementById(`approveModal${requestId}`).classList.add('hidden');
+
+
+
+                    function closeModal(userId) {
+                        const modal = document.getElementById(`approveModal${userId}`);
+                        modal.classList.add('hidden');
+
+                        // Reset modal content and form errors when closing
+                        resetModalContent(modal);
+                    }
+
+                    function resetModalContent(modal) {
+                        // Reset form fields
+                        const form = modal.querySelector('form');
+                        if (form) {
+                            form.reset(); // Resets all form input fields to their default values
+                        }
+
+                        // Clear error messages
+                        modal.querySelectorAll('.text-red-600').forEach(errorMessage => {
+                            errorMessage.textContent = ''; // Clear error text
+                        });
+
+                        // Remove error styles from input fields
+                        modal.querySelectorAll('.border-red-500').forEach(inputField => {
+                            inputField.classList.remove('border-red-500');
+                        });
                     }
                 </script>
             </div>
