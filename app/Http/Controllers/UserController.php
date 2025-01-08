@@ -1,13 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\Role;
 use App\Models\Commission;
-// use App\Models\AffiliateUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

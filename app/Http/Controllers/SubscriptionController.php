@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\AffiliateUser;
 use App\Models\AffiliateReferral;
 use App\Models\UserDetail;
 use App\Models\Commission;

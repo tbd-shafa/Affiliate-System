@@ -8,8 +8,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AffiliateUser;
-use App\Models\AffiliateReferral;
-use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Commission;
 use App\Models\User;
@@ -116,6 +114,7 @@ class AffiliateController extends Controller
                 'percentage_value' => $request->percentage,
                 'status' => 'approved',
                 'affiliate_code' => $affiliateCode, // Save the unique code
+                'affiliate_status' => 'enable', 
             ]);
 
             // Get the email address of the user associated with the affiliate
@@ -159,7 +158,6 @@ class AffiliateController extends Controller
 
             // Send approval email
             $this->sendApprovalEmail($user->email, true);
-            // Send approval email
             // $this->sendApprovalEmail($userEmail, true);
 
             return redirect()->route('affiliate.requests')->with('success', 'Affiliate Request approved successfully.');
